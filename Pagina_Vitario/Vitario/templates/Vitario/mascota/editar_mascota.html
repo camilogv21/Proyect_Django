@@ -1,0 +1,27 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>MODIFICAR MASCOTA <strong> -_- {{ datos.nombre_mascota }} -_-</strong></h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:actualizar_mascota' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="id" value="{{datos.id}}" >
+
+    <label for="">Id de la mascota</label><br />
+    <input type="text" class="form-control" name="id_mascota" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_mascota }}"><br/>
+
+    <label for="">Nombre de la mascota</label><br />
+    <input type="text" class="form-control" name="nombre_mascota" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_mascota }}"><br/>
+
+    <label for="">Tipo de mascota</label><br />
+    <input type="text" class="form-control" name="tipo_mascota" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.tipo_mascota }}"><br/>
+
+    <label for="">Edad</label><br />
+    <input type="number" class="form-control" name="edad" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.edad }}"><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock  %}

@@ -1,0 +1,29 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>CREAR PRODUCTOS</h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:guardar_producto' %}" method="post">
+    {% csrf_token %}
+
+    <label for="">Codigo del producto</label><br />
+    <input type="text" class="form-control" name="codigo_producto" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Nombre del producto</label><br />
+    <input type="text" class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Cantidad</label><br />
+    <input type="number" class="form-control" name="cantidad" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Tipo de producto</label><br/>
+    <input type="text" class="form-control" name="tipo_producto" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Precio</label><br />
+    <input type="number" class="form-control" name="precio" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+</form>
+{% endblock  %}
+

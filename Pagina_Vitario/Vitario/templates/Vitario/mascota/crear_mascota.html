@@ -1,0 +1,37 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>CREAR MASTOCAS</h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:guardar_mascota' %}" method="post">
+    {% csrf_token %}
+
+    <label for="">Id de la mascota</label><br />
+    <input type="text" class="form-control" name="id_mascota" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Nombre de la mascota</label><br />
+    <input type="text" class="form-control" name="nombre_mascota" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Tipo de mascota</label><br />
+    <input type="text" class="form-control" name="tipo_mascota" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Edad</label><br />
+    <input type="number" class="form-control" name="edad" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Usuario</label><br />
+    <select class="form-control" name="usuario" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if datos %}
+            {% for registro in datos%}
+                <option value="{{registro.id}}">{{registro.nombre}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+</form>
+{% endblock  %}
+

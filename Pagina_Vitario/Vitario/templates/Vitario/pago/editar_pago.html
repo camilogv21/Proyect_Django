@@ -1,0 +1,21 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>MODIFICAR PAGOS <strong> -_- {{ datos.medio_pago }} -_-</strong></h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:actualizar_pago' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="id" value="{{datos.id}}" >
+
+    <label for="">Id del pago</label><br />
+    <input type="text" class="form-control" name="id_pago" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_pago }}"><br/>
+
+    <label for="">Medio de pago</label><br />
+    <input type="text" class="form-control" name="medio_pago" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.medio_pago }}"><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock  %}

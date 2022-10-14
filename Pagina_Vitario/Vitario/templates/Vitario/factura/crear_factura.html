@@ -1,0 +1,73 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>CREAR FACTURAS</h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:guardar_factura' %}" method="post">
+    {% csrf_token %}
+
+    <label for="">Id de la factura</label><br />
+    <input type="text" class="form-control" name="id_factura" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+    
+    <label for="">Nombre del producto</label><br />
+    <select class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if datop %}
+            {% for registrop in datop%}
+                <option value="{{registrop.id}}">{{registrop.nombre_producto}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
+    
+    <label for="">Cantidad</label><br />
+    <input type="text" class="form-control" name="cantidad" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">total sin descuento</label><br />
+    <input type="number" class="form-control" name="total_sin_descuento" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Descuento</label><br />
+    <input type="number" class="form-control" name="descuento" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Total con descuento</label><br />
+    <input type="number" class="form-control" name="total_con_descuento" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="">Pago</label><br />
+    <select class="form-control" name="pago" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if datoq %}
+            {% for registroq in datoq%}
+                <option value="{{registroq.id}}">{{ registroq.madio_pago }}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
+
+    <label for="">usuario</label><br />
+    <select class="form-control" name="usuario" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if datou %}
+            {% for registrou in datoq%}
+                <option value="{{registrou.id}}">{{ registrou.usuario }}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
+
+    <label for="">Servicios</label><br />
+    <select class="form-control" name="servicios" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if datos %}
+            {% for registros in datos%}
+                <option value="{{registros.id}}">{{registros.servicio}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button><br><br>
+</form>
+{% endblock  %}
+

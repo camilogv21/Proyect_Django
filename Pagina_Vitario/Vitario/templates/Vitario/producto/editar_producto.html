@@ -1,0 +1,30 @@
+
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>MODIFICAR PRODUCTOS <strong> -_- {{ datos.nombre_producto}} -_-</strong></h1>
+
+<form style="text-align:center;" action="{% url 'Vitario:actualizar_producto' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="id" value="{{datos.id}}" > 
+
+    <label for="">Codigo del producto</label><br />
+    <input type="text" class="form-control" name="codigo_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.codigo_producto }}"><br/>
+
+    <label for="">Nombre del producto</label><br />
+    <input type="text" class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_producto }}"><br/>
+
+    <label for="">Cantidad</label><br />
+    <input type="number" class="form-control" name="cantidad" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.cantidad }}"><br/>
+
+    <label for="">Tipo de producto</label><br/>
+    <input type="text" class="form-control" name="tipo_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.tipo_producto }}"><br/>
+
+    <label for="">Precio</label><br />
+    <input type="number" class="form-control" name="precio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.precio }}"><br/>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock  %}

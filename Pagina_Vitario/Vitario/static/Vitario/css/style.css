@@ -1,0 +1,58 @@
+/*============================Body==============================*/
+
+body {
+    color: #fff;
+    background: url("../img/fondo.jpg") top center no-repeat;
+    background-size: cover;
+    filter: opacity(150%);
+    position: relative; 
+}  
+
+/*============================nav==============================*/
+
+nav.navbar{
+    margin: 0px;
+    background-color: #feeee2;
+}
+
+#boton a{
+    color: #718fca;
+}
+
+#img2{
+    background: linear-gradient(#eed2df,#feeee2 70%); 
+}
+#perro{
+    text-align: right;
+    float:right;
+}
+
+.nav-item .nav-link button{
+    text-align: right;
+    float:right;
+}
+
+.navbar ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+
+.navbar li {
+    position: relative;
+}
+
+.navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover > a {
+    color: #718fca;
+}
+
+/*============================Footer==============================*/
+
+footer{
+    background-color: #718fca;
+    padding: 1em 0;
+    text-align: center;
+    margin-top: auto;
+}

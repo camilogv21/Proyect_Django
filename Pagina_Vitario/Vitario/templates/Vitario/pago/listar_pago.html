@@ -1,0 +1,79 @@
+{% extends 'Vitario/base.html' %}
+
+
+{% block body %}
+
+<h1>PAGOS</h1>
+
+<a class="btn btn-primary" href="{% url 'Vitario:crear_pago' %}">Nuevo pago</a> <br /><br />
+
+    
+    <input class="form-control me-2" type="search" name="buscar" id="buscar" placeholder="Buscar" aria-label="Search" value="{{ Datos }}" onkeyup="buscarA('{% url 'Vitario:Buscar_pago' %}');">
+    {% csrf_token %}
+
+{%  if Datos %}
+<a href="{% url 'Vitario:pago' %}"> ver todos </a>
+{% endif %}
+
+<div id="res">
+
+{% if page_obj %}
+
+<table border="1" width="100%" class="table">
+    <thead>
+        <tr>
+            
+            <td>ID</td>
+            <td>ID DEL PAGP</td>
+            <td>MEDIO DE PAGO</td>
+            <td>Editar</td>
+            <td>Eliminar</td>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for registro in page_obj %}
+        <tr>
+            <td>{{ registro.id }}</td>
+            <td>{{ registro.id_pago }}</td>
+            <td>{{ registro.medio_pago }}</td>
+            <td>
+                <a class="btn btn-primary" href="{% url 'Vitario:editar_pago' registro.id %}"> editar</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" onclick="confirmarEliminar('{% url 'Vitario:eliminar_pago' registro.id %}')";> eliminar</a>
+            </td>
+        </tr>
+        
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+            
+            <a class="page-link" {% if page_obj.has_previous %} href="?page={{ page_obj.previous_page_number }} " {% endif %}  >Anterior</a>
+            
+        </li>
+        {% for i in "d"|rjust:page_obj.paginator.num_pages|make_list %}
+
+        <li class="page-item {% if forloop.counter == page_obj.number %} active {% endif %}"><a class="page-link" aria-current="page " href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+
+        {% endfor %}
+
+        <li class="page-item {% if not page_obj.has_next %} disabled {% endif %} ">
+            <a class="page-link" {% if page_obj.has_next %} href="?page={{ page_obj.next_page_number }}" {% endif %} >siguiente</a>
+        </li>
+    </ul>
+</nav>
+
+
+
+{% else %}
+<h1>No hay datos</h1>
+{% endif %}
+
+</div>
+
+{% endblock %}
