@@ -5,17 +5,20 @@
 
 <h1>CREAR SERVICIOS</h1>
 
-<form style="text-align:center;" action="{% url 'Vitario:guardar_servicio' %}" method="post">
+<form style="text-align:center;" action="{% url 'Vitario:guardar_servicio' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <label for="">Id del servicio</label><br />
-    <input type="text" class="form-control" name="id_servicio" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+    <label for="">Codigo del servicio</label><br />
+    <input type="text" class="form-control" name="codigo_servicio" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
 
     <label for="">Nombre del servicio</label><br />
     <input type="text" class="form-control" name="nombre_servicio" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
 
     <label for="">Precio del servicio</label><br />
     <input type="number" class="form-control" name="precio_servicio" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+
+    <label for="text">Foto: </label>
+    <input type="file" class="form-control" name="foto" style="width:70%; margin-left: auto; margin-right:auto;" accept="image/">
 
     <button type="submit" class="btn btn-primary">Guardar</button><br><br>
 </form>

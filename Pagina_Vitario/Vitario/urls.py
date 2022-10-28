@@ -19,6 +19,7 @@ urlpatterns = [
     path('editarusUario/<int:id>',views.editarUsuario, name="editar_usuario"),
     path('actualizarUsuario/',views.actualizarUsuario, name="actualizar_usuario"),
     path('BuscarUsuario/',views.usuarioBuscar, name="Buscar_usuario"),
+    path('registro/',views.usuarioRegistro, name="Registro"),
     
     path('mascota/', views.mascota, name="mascota"),
     path('crear_mascota/', views.mascotaFormulario, name="crear_mascota"),
@@ -28,14 +29,6 @@ urlpatterns = [
     path('actualizarMascota/',views.actualizarMascota, name="actualizar_mascota"),
     path('BuscarMascota/',views.mascotaBuscar, name="Buscar_mascota"),
     
-    path('pago/', views.pago, name="pago"),
-    path('crear_pago/', views.pagoFormulario, name="crear_pago"),
-    path('guardar_pago/', views.pagoGuardar, name="guardar_pago"),
-    path('eliminar_pago/<int:id>',views.pagoEliminar, name="eliminar_pago"),
-    path('editarPago/<int:id>',views.editarPago, name="editar_pago"),
-    path('actualizarPago/',views.actualizarPago, name="actualizar_pago"),
-    path('BuscarPago/',views.pagoBuscar, name="Buscar_pago"),
-    
     path('producto/', views.producto, name="producto"),
     path('crear_producto/', views.productoFormulario, name="crear_producto"),
     path('guardar_producto/', views.productoGuardar, name="guardar_producto"),
@@ -43,6 +36,7 @@ urlpatterns = [
     path('editarProducto/<int:id>',views.editarProducto, name="editar_producto"),
     path('actualizarProducto/',views.actualizarProducto, name="actualizar_producto"),
     path('BuscarProducto/',views.productoBuscar, name="Buscar_producto"),
+    path('tarjeta_producto/', views.productoConcentrado, name="tarjetaproducto"),
     
     path('factura/', views.factura, name="factura"),
     path('crear_factura/', views.facturaFormulario, name="crear_factura"),
@@ -59,6 +53,7 @@ urlpatterns = [
     path('editarServicio/<int:id>',views.editarServicio, name="editar_servicio"),
     path('actualizarServicio/',views.actualizarServicio, name="actualizar_servicio"),
     path('BuscarServicio/',views.servicioBuscar, name="Buscar_servicio"),
+    path('tarjeta_servicio/', views.servicioTarjetas, name="tarjetaservicio"),
     
     path('cita/', views.cita, name="cita"),
     path('crear_cita/', views.citaFormulario, name="crear_cita"),
@@ -67,4 +62,8 @@ urlpatterns = [
     path('editarCita/<int:id>',views.editarCita, name="editar_cita"),
     path('actualizarCita/',views.actualizarCita, name="actualizar_cita"),
     path('BuscarCita/',views.citaBuscar, name="Buscar_cita"),
+    path('agendar_cita/', views.citaAgendar, name="agendar_cita"),
+    
+    path('perfil/',views.perfil, name="perfil"),
+    path('actualizarPerfil/',views.actualizarPerfil, name="actualizar_perfil"),
 ]

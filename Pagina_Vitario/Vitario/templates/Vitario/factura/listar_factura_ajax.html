@@ -7,8 +7,7 @@
     <thead>
         <tr>
             
-            <td>ID</td>
-            <td>Id de la factura</td>
+            <td>Id</td>
             <td>Nombre del producto</td>
             <td>Cantidad</td>
             <td>Total sin descuento</td>
@@ -26,13 +25,12 @@
         {% for registro in page_obj %}
         <tr>
             <td>{{ registro.id }}</td>
-            <td>{{ registro.id_factura }}</td>
             <td>{{ registro.nombre_producto }}</td>
             <td>{{ registro.cantidad }}</td>
             <td>{{ registro.total_sin_descuento }}</td>
             <td>{{ registro.descuento }}</td>
             <td>{{ registro.total_con_descuento }}</td>
-            <td>{{ registro.pago }}</td>
+            <td>{{ registro.get_medio_pago_display }}</td>
             <td>{{ registro.usuario }}</td>
             <td>{{ registro.servicios }}</td>
             <td>

@@ -5,7 +5,7 @@
 
 <h1>CITAS</h1>
 
-<a class="btn btn-primary" href="{% url 'Vitario:crear_cita' %}">Nuevo cita</a> <br /><br />
+<a class="btn btn-primary" href="{% url 'Vitario:crear_cita' %}">Nueva cita</a> <br /><br />
 
     
     <input class="form-control me-2" type="search" name="buscar" id="buscar" placeholder="Buscar" aria-label="Search" value="{{ Datos }}" onkeyup="buscarA('{% url 'Vitario:Buscar_cita' %}');">
@@ -25,8 +25,8 @@
 <table border="1" width="100%" class="table">
     <thead>
         <tr>  
-            <td>ID</td>
-            <td>Id de la cita</td>
+            <td>Id</td>
+            <td>Usuario</td>
             <td>Hora y fecha</td>
             <td>Servicio</td>
             <td>Editar</td>
@@ -38,7 +38,7 @@
         {% for registro in page_obj %}
         <tr>
             <td>{{ registro.id }}</td>
-            <td>{{ registro.id_cita }}</td>
+            <td>{{ registro.usuario }}</td>
             <td>{{ registro.hora_fecha }}</td>
             <td>{{ registro.servicio }}</td>
             <td>

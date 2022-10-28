@@ -8,14 +8,11 @@
 <form style="text-align:center;" action="{% url 'Vitario:guardar_factura' %}" method="post">
     {% csrf_token %}
 
-    <label for="">Id de la factura</label><br />
-    <input type="text" class="form-control" name="id_factura" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
-    
     <label for="">Nombre del producto</label><br />
     <select class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;">
-        {% if datop %}
-            {% for registrop in datop%}
-                <option value="{{registrop.id}}">{{registrop.nombre_producto}}</option>
+        {% if producto %}
+            {% for registro in producto %}
+                <option value="{{registro.id}}">{{registro.nombre_producto}}</option>
             {% endfor %}
         {% else %}
             <h1>No hay datos</h1>
@@ -34,22 +31,18 @@
     <label for="">Total con descuento</label><br />
     <input type="number" class="form-control" name="total_con_descuento" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
 
-    <label for="">Pago</label><br />
-    <select class="form-control" name="pago" style="width:70%; margin-left: auto; margin-right:auto;">
-        {% if datoq %}
-            {% for registroq in datoq%}
-                <option value="{{registroq.id}}">{{ registroq.madio_pago }}</option>
-            {% endfor %}
-        {% else %}
-            <h1>No hay datos</h1>
-        {% endif %}
+    <label for="">Medio de Pago</label><br />
+    <select class="form-control" name="medio_pago" style="width:70%; margin-left: auto; margin-right:auto;">
+        <option value="E">Efectivo</option>
+        <option value="T">Transferencia</option>
+        <option value="A">Tarjeta</option>
     </select><br/>
 
     <label for="">usuario</label><br />
     <select class="form-control" name="usuario" style="width:70%; margin-left: auto; margin-right:auto;">
-        {% if datou %}
-            {% for registrou in datoq%}
-                <option value="{{registrou.id}}">{{ registrou.usuario }}</option>
+        {% if usuario %}
+            {% for registro in usuario %}
+                <option value="{{registro.id}}">{{ registro.usuario }}</option>
             {% endfor %}
         {% else %}
             <h1>No hay datos</h1>
@@ -57,10 +50,10 @@
     </select><br/>
 
     <label for="">Servicios</label><br />
-    <select class="form-control" name="servicios" style="width:70%; margin-left: auto; margin-right:auto;">
-        {% if datos %}
-            {% for registros in datos%}
-                <option value="{{registros.id}}">{{registros.servicio}}</option>
+    <select class="form-control" name="servicio" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if servicio %}
+            {% for registro in servicio %}
+                <option value="{{registro.id}}">{{registro.nombre_servicio}}</option>
             {% endfor %}
         {% else %}
             <h1>No hay datos</h1>

@@ -8,16 +8,24 @@
 <form style="text-align:center;" action="{% url 'Vitario:guardar_cita' %}" method="post">
     {% csrf_token %}
 
-    <label for="">Id de la cita</label><br />
-    <input type="text" class="form-control" name="id_cita" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+    <label for="">Usuario</label><br />
+    <select class="form-control" name="nombre" style="width:70%; margin-left: auto; margin-right:auto;">
+        {% if user %}
+            {% for registro in user %}
+                <option value="{{registro.id}}">{{registro.nombre}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/>
 
     <label for="">Hora y fecha</label><br />
-    <input type="date" class="form-control" name="hora_fecha" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
+    <input type="datetime-local" class="form-control" name="hora_fecha" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
 
     <label for="">Servicio</label><br />
-    <select class="form-control" namioe="servicio" style="width:70%; margin-left: auto; margin-right:auto;">
+    <select class="form-control" name="nombre_servicio" style="width:70%; margin-left: auto; margin-right:auto;">
         {% if datos %}
-            {% for registro in datos%}
+            {% for registro in datos %}
                 <option value="{{registro.id}}">{{registro.nombre_servicio}}</option>
             {% endfor %}
         {% else %}

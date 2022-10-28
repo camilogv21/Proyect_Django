@@ -14,6 +14,7 @@
             <td>Correo</td>
             <td>Usuario</td>
             <td>Rol</td>
+            <td>Foto</td>
             <td>Editar</td>
             <td>Eliminar</td>
         </tr>
@@ -29,6 +30,7 @@
             <td>{{ registro.correo }}</td>
             <td>{{ registro.usuario }}</td>
             <td>{{ registro.get_rol_display }}</td>
+            <td><img src="{{ registro.foto.url }} " style="width: 7%;"></td>
             <td>
                 <a class="btn btn-primary" href="{% url 'Vitario:editar_usuario' registro.id %}"> editar</a>
             </td>

@@ -7,11 +7,18 @@
 
 <form style="text-align:center;" action="{% url 'Vitario:actualizar_factura' %}" method="post">
     {% csrf_token %}
-
     <input type="hidden" name="id" value="{{datos.id}}" >
-
-    <label for="">Id de la factura</label><br />
-    <input type="text" class="form-control" name="id_factura" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_factura }}"><br/>
+    
+    <!-- <label for="">Nombre del producto</label><br />
+    <select class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_producto }}">
+        {% if producto %}
+            {% for registro in producto %}
+                <option value="{{registro.id}}">{{registro.nombre_producto}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/> -->
     
     <label for="">Cantidad</label><br />
     <input type="text" class="form-control" name="cantidad" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.cantidad }}"><br/>
@@ -25,6 +32,29 @@
     <label for="">Total con descuento</label><br />
     <input type="number" class="form-control" name="total_con_descuento" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.total_con_descuento }}"><br/>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <label for="">Medio de Pago</label><br />
+    <select class="form-control" name="medio_pago" style="width:70%; margin-left: auto; margin-right:auto; " value="{{ datos.medio_pago }}">
+        <option value="E">Efectivo</option>
+        <option value="T">Transferencia</option>
+        <option value="A">Tarjeta</option>
+    </select><br/>
+
+    <!-- <label for="">Servicios</label><br />
+    <select class="form-control" name="servicio" style="width:70%; margin-left: auto; margin-right:auto;" >
+        {% if servicio %}
+            {% for registro in servicio %}
+                <option value="{{registro.id}}">{{registro.nombre_servicio}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/> -->
+
+    <button type="submit" class="btn btn-primary">Guardar</button><br><br>
 </form>
 {% endblock  %}
+
+
+
+
+

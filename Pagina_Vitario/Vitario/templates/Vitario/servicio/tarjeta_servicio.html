@@ -1,0 +1,22 @@
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+    <div id="tabla">
+        {% if datos %}
+            {% for i in datos %}
+                <div class="card" id="card">
+                    <img src="{{ i.foto.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ i.nombre_servicio }}</h5>
+                        <p class="card-text">${{ i.precio_servicio }}</p>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#agendar" href="{% url 'Vitario:crear_cita' %}">Agendar cita</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </div><br>
+
+{% endblock  %}

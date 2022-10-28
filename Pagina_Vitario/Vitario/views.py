@@ -1,11 +1,79 @@
+from pathlib import Path
 from django.shortcuts import render,redirect
-from .models import Usuario, Mascota, Pago, Producto, Factura, Servicios, Citas
+from .models import Usuario, Mascota, Producto, Factura, Servicios, Citas
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.files.storage import FileSystemStorage
+from .crypt import claveEncriptada
+from os import remove, path
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Create your views here.
+#=============================================================Perfil=======================================================================
+
+def perfil(request):
+    login = request.session.get('logueo', False)
+    q =Usuario.objects.get(pk = login[0])
+    contexto = {"perfil": q }
+    return render(request,'Vitario/usuario/perfil.html',contexto)
+
+
+def actualizarPerfil(request):
+
+    if request.method == "POST":
+        try:
+            login = request.session.get('logueo', False)
+
+            q = Usuario.objects.get(pk = login[0])
+
+            q.nombre = request.POST["nombre"]
+            q.direccion = request.POST["direccion"]
+            q.telefono = request.POST["telefono"]
+            q.correo = request.POST["correo"]
+
+            if q.usuario != request.POST["usuario"]:
+                try:
+                    consulta = Usuario.objects.get(usuario = request.POST["usuario"])
+                    raise Exception("El usuario ya existe")
+                except Usuario.DoesNotExist:
+                    q.usuario = request.POST["usuario"]
+            else:
+                q.usuario = request.POST["usuario"]
+
+            if request.POST["clave"] != "":
+                q.clave = claveEncriptada(request.POST["clave"])
+
+            q.save()
+            login[1] = q.nombre
+            request.session["logueo"] = login
+
+            messages.success(request,"Actualizacion correcta")
+        except Usuario.DoesNotExist:
+            messages.error(request,'No existe el usuario')
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+    else:
+        messages.warning(request, "No envio datos...")
+
+    return redirect('Vitario:perfil')
+
+
+"""         from django.core.mail import send_mail
+            try:
+                send_mail(
+                    'Correo de Actualizacion',
+                    'Hola como estas te escribo desde Vitario y tus datos han sido actualisados',
+                    'galeanocamilo10@gmail.com',
+                    ['jucagave10@outlook.como'],
+                    fail_silently=False,
+                )
+                messages.info(request, "Correo enviado")
+            except Exception as e:
+                messages.error(request, f"Error: {e}") """
+
+#==========================================================================================================================================
 
 def inicio(request):
     
@@ -21,7 +89,7 @@ def login(request):
     try:
         
         user = request.POST['usuario']
-        pasw = request.POST['clave']
+        pasw = claveEncriptada(request.POST["clave"])
 
         q = Usuario.objects.get(usuario = user, clave = pasw)
         
@@ -92,14 +160,25 @@ def usuarioFormulario(request):
 def usuarioGuardar(request):
     try:
         if request.method == "POST":
+            if request.FILES:
+                # crear instacian de file sistem storage
+                fss = FileSystemStorage()
+                # capturar foto de formulario
+                r = request.FILES["foto"]
+                # cargar archivo alservidor
+                file = fss.save("vitario/fotos/"+ r.name, r)
+            else:
+                file = "vitario/fotos/defaultUsu.png"
+            
             q = Usuario(
                 nombre = request.POST["nombre"],
                 direccion = request.POST["direccion"],
                 telefono = request.POST["telefono"],
                 correo = request.POST["correo"],
                 usuario = request.POST["usuario"],
-                clave = request.POST["clave"],
+                clave = claveEncriptada(request.POST["clave"]),
                 rol = request.POST["rol"],
+                foto = file
             )
             q.save()
             messages.success(request,"¡Usuario guardado correctamente!")
@@ -114,12 +193,27 @@ def usuarioGuardar(request):
 def usuarioEliminar(request,id):
     try:
         a = Usuario.objects.get(pk = id)
+        # Primero eliminar la foto y despues el usuario
+        ruta_foto = str(BASE_DIR) + str(a.foto.url)
+        #averiguamos si la ruta es validad
+        if path.exists(ruta_foto):
+            #Borramos la ruta de la foto
+            if a.foto.url != "/uploads/vitario/fotos/defaultUsu.png":
+                remove(ruta_foto)
+            # messages.success(request,"Foto eliminada correctamente")
+        else:
+            messages.error(request,"No se pudo eliminar la foto")
+            raise Exception("Error!!! la foto no existe o no se encuentra")
         a.delete()
-        return redirect('Vitario:usuario')
+        messages.success(request,"Usuario eliminado correctamente")
+        return redirect('vitario:usuario')
     except Usuario.DoesNotExist:
-        return HttpResponse('ERROR: Usuario no encontrado')
+        messages.error(request,"Error!! el ueuario no existe")
     except Exception as e:
-        return HttpResponse(f'ERROR: {e}')
+        messages.error(request,f'Error!! no se pudo eliminar el registro: {e}')
+
+def usuarioRegistro(request):
+    return render(request, 'Vitario/usuario/registro.html')
     
 def editarUsuario(request, id):
     A = Usuario.objects.get(pk = id)
@@ -129,13 +223,28 @@ def editarUsuario(request, id):
 def actualizarUsuario(request):
     try:
         if request.method == "POST":
-            a = Usuario.objects.get(pk = request.POST["id"])
+            a = Usuario.objects.get(pk = request.POST["id"]) 
+            if request.FILES:
+                #Eliminar foto Anterior
+                ruta_foto = str(BASE_DIR) + str(a.foto.url)
+                if path.exists(ruta_foto):
+                    if a.foto.url != "/uploads/vitario/fotos/defaultUsu.png":
+                        remove(ruta_foto)
+                else:
+                    raise Exception("Error!!! la foto no existe o no se encuentra")
+                #Guardar foto Nueva
+                fss = FileSystemStorage()
+                r = request.FILES["foto"]
+                file = fss.save("vitario/fotos/"+ r.name, r)
+                a.foto = file
+            else:
+                print ("El  usuario no cambio la foto")
+                
             a.nombre = request.POST["nombre"]
             a.direccion = request.POST["direccion"]
             a.telefono = request.POST["telefono"]
             a.correo = request.POST["correo"]
             a.usuario = request.POST["usuario"]
-            a.clave = request.POST["clave"]
             a.rol = request.POST["rol"]
             a.save()
             messages.success(request,"¡Usuario Actualizado correctamente!")
@@ -193,7 +302,6 @@ def mascotaGuardar(request):
         a = Usuario.objects.get(pk = request.POST["usuario"])
         if request.method == "POST":
             q = Mascota(
-                id_mascota = request.POST["id_mascota"],
                 nombre_mascota = request.POST["nombre_mascota"],
                 tipo_mascota = request.POST["tipo_mascota"],
                 edad = request.POST["edad"],
@@ -228,11 +336,9 @@ def actualizarMascota(request):
     try:
         if request.method == "POST":
             a = Mascota.objects.get(pk = request.POST["id"])
-            a.id_mascota = request.POST["id_mascota"]
             a.nombre_mascota = request.POST["nombre_mascota"]
             a.tipo_mascota = request.POST["tipo_mascota"]
             a.edad = request.POST["edad"]
-            a.usuario = request.POST["usuario"]
             a.save()
             messages.success(request,"¡mascota Actualizado correctamente!")
             return redirect('Vitario:mascota')
@@ -242,93 +348,6 @@ def actualizarMascota(request):
     except Exception as e:
         messages.error(request,"Error" + str(e))
         return redirect('Vitario:mascota')
-
-# =========================================================================================================================================
-
-# ===================================================PAGO==================================================================================
-
-def pago(request):
-    
-    q = Pago.objects.all()
-    
-    p = Paginator(q, 9)
-    p_number = request.GET.get('page')
-    
-    q = p.get_page(p_number)
-    
-    contexto = {'page_obj': q}
-    
-    return render(request, 'Vitario/pago/listar_pago.html', contexto)
-
-def pagoBuscar (request):
-    
-    if request.method == "POST":
-        q = Pago.objects.filter(
-            Q(medio_pago__icontains = request.POST["buscar"])
-            )
-        p = Paginator(q, 9)
-        p_number = request.GET.get('page')
-        
-        q = p.get_page(p_number)
-        
-        contexto = {'page_obj': q, 'Datos': request.POST["buscar"]}
-        
-        return render(request, 'Vitario/pago/listar_pago_ajax.html',contexto)
-    else:
-        messages.warning(request, "No se han enviado datos")
-        return redirect('Vitario:pago')
-    
-def pagoFormulario(request):
-    return render(request, 'Vitario/pago/crear_pago.html')
-
-def pagoGuardar(request):
-    try:
-        if request.method == "POST":
-            q = Pago(
-                id_pago = request.POST["id_pago"],
-                medio_pago = request.POST["medio_pago"],
-            )
-            q.save()
-            messages.success(request,"¡pago guardado correctamente!")
-            return redirect('Vitario:pago')
-        else:
-            messages.warning(request, "¡No se han enviado datos!")
-            return redirect('Vitario:pago')
-    except Exception as e:
-        messages.error(request,"Error" + str(e))
-        return redirect('Vitario:pago')
-    
-def pagoEliminar(request,id):
-    try:
-        a = Pago.objects.get(pk = id)
-        a.delete()
-        return redirect('Vitario:pago')
-    except Pago.DoesNotExist:
-        return HttpResponse('ERROR: pago no encontrado')
-    except Exception as e:
-        return HttpResponse(f'ERROR: {e}')
-    
-def editarPago(request, id):
-    A = Pago.objects.get(pk = id)
-    contexto = {"datos":A}
-    return render(request, 'Vitario/pago/editar_pago.html', contexto)
-
-def actualizarPago(request):
-    try:
-        if request.method == "POST":
-            a = Pago.objects.get(pk = request.POST["id"])
-            a.id_pago = request.POST["id_pago"]
-            a.medio_pago = request.POST["medio_pago"]
-            a.save()
-            messages.success(request,"¡pago Actualizado correctamente!")
-            return redirect('Vitario:pago')
-        else:
-            messages.warning(request,"¡No se han enviado datos!")
-            return redirect('Vitario:pago')
-    except Exception as e:
-        messages.error(request,"Error" + str(e))
-        return redirect('Vitario:pago')
-    
 
 # =========================================================================================================================================
 
@@ -346,6 +365,30 @@ def producto(request):
     contexto = {'page_obj': q}
     
     return render(request, 'Vitario/producto/listar_producto.html', contexto)
+
+def productoConcentrado(request):
+    
+    q = Producto.objects.all()
+    contexto = {'datos': q}
+    return render(request, 'Vitario/producto/concentrado.html', contexto)
+
+def productoMedi(request):
+    
+    q = Producto.objects.all()
+    contexto = {'datos': q}
+    return render(request, 'Vitario/producto/Medicamentos.html', contexto)
+
+def productoAcce(request):
+    
+    q = Producto.objects.all()
+    contexto = {'datos': q}
+    return render(request, 'Vitario/producto/Accesorios.html', contexto)
+
+def productoAlimen(request):
+    
+    q = Producto.objects.all()
+    contexto = {'datos': q}
+    return render(request, 'Vitario/producto/Alimentos.html', contexto)
 
 def productoBuscar (request):
     
@@ -372,12 +415,20 @@ def productoFormulario(request):
 def productoGuardar(request):
     try:
         if request.method == "POST":
+            if request.FILES:
+                fss = FileSystemStorage()
+                r = request.FILES["foto"]
+                file = fss.save("vitario/fotos/"+ r.name, r)
+            else:
+                file = "vitario/fotos/defaultPro.png"
+            
             q = Producto(
                 codigo_producto = request.POST["codigo_producto"],
                 nombre_producto = request.POST["nombre_producto"],
+                categoria = request.POST["categoria"],
                 cantidad = request.POST["cantidad"],
-                tipo_producto = request.POST["tipo_producto"],
                 precio = request.POST["precio"],
+                foto = file
             )
             q.save()
             messages.success(request,"¡producto guardado correctamente!")
@@ -392,15 +443,24 @@ def productoGuardar(request):
 def productoEliminar(request,id):
     try:
         a = Producto.objects.get(pk = id)
+        ruta_foto = str(BASE_DIR) + str(a.foto.url)
+        if path.exists(ruta_foto):
+            if a.foto.url != "/uploads/vitario/fotos/defaultPro.png":
+                remove(ruta_foto)
+        else:
+            messages.error(request,"No se pudo eliminar la foto")
+            raise Exception("Error!!! la foto no existe o no se encuentra")
         a.delete()
-        return redirect('Vitario:producto')
+        messages.success(request,"Producto eliminado correctamente")
+        return redirect('vitario:producto')
     except Producto.DoesNotExist:
-        return HttpResponse('ERROR: producto no encontrado')
+        messages.error(request,"Error!! el ueuario no existe")
     except Exception as e:
-        return HttpResponse(f'ERROR: {e}')
-    
+        messages.error(request,f'Error!! no se pudo eliminar el registro: {e}')
+
 def editarProducto(request, id):
     A = Producto.objects.get(pk = id)
+    
     contexto = {"datos":A}
     return render(request, 'Vitario/producto/editar_producto.html', contexto)
 
@@ -408,10 +468,24 @@ def actualizarProducto(request):
     try:
         if request.method == "POST":
             a = Producto.objects.get(pk = request.POST["id"])
+            if request.FILES:
+                ruta_foto = str(BASE_DIR) + str(a.foto.url)
+                if path.exists(ruta_foto):
+                    if a.foto.url != "/uploads/vitario/fotos/defaultPro.png":
+                        remove(ruta_foto)
+                else:
+                    raise Exception("Error!!! la foto no existe o no se encuentra")
+                fss = FileSystemStorage()
+                r = request.FILES["foto"]
+                file = fss.save("vitario/fotos/"+ r.name, r)
+                a.foto = file
+            else:
+                print ("No se cambio la foto")
+                
             a.codigo_producto = request.POST["codigo_producto"]
-            a.nombre_product = request.POST["nombre_product"]
+            a.nombre_producto = request.POST["nombre_producto"]
+            a.categoria = request.POST["categoria"]
             a.cantidad = request.POST["cantidad"]
-            a.tipo_producto = request.POST["tipo_producto"]
             a.precio = request.POST["precio"]
             a.save()
             messages.success(request,"¡producto Actualizado correctamente!")
@@ -460,41 +534,29 @@ def facturaBuscar (request):
     
 def facturaFormulario(request):
     p = Producto.objects.all()
-    contextop = {'datop':p}
-    
-    q = Pago.objects.all()
-    contexto = {'datoq':q}
     
     u = Usuario.objects.all()
-    contextou = {'datou':u}
     
     s = Servicios.objects.all()
-    contextos = {'datos':s}
-    
-    
-    
-    return render(request, 'Vitario/factura/crear_factura.html',{"contexto" : contexto , 
-                                                                "contextop": contextop , 
-                                                                "contextos": contextos , 
-                                                                "contextou" : contextou })
+
+    contexto = {'producto':p,'usuario':u,'servicio':s}
+
+    return render(request, 'Vitario/factura/crear_factura.html', contexto)
 
 def facturaGuardar(request):
     try:
         p = Producto.objects.get(pk = request.POST["nombre_producto"])
-        b = Pago.objects.get(pk = request.POST["pago"])
         u = Usuario.objects.get(pk = request.POST["usuario"])
-        s = Servicios.objects.get(pk = request.POST["servicios"])
+        s = Servicios.objects.get(pk = request.POST["servicio"])
         
         if request.method == "POST":
             q = Factura(
-                id_factura = request.POST["id_factura"],
-                direccion = request.POST["direccion"],
                 nombre_producto = p,
                 cantidad = request.POST["cantidad"],
                 total_sin_descuento = request.POST["total_sin_descuento"],
                 descuento = request.POST["descuento"],
                 total_con_descuento = request.POST["total_con_descuento"],
-                pago = b,
+                medio_pago = request.POST["medio_pago"],
                 usuario = u,
                 servicios = s,
             )
@@ -520,21 +582,27 @@ def facturaEliminar(request,id):
     
 def editarFactura(request, id):
     A = Factura.objects.get(pk = id)
-    contexto = {"datos":A}
+
+    p = Producto.objects.all()
+    
+    u = Usuario.objects.all()
+    
+    s = Servicios.objects.all()
+
+    contexto = {'producto':p,'usuario':u,'servicio':s,"datos":A}
+
     return render(request, 'Vitario/factura/editar_factura.html', contexto)
 
 def actualizarFactura(request):
     try:
         if request.method == "POST":
             a = Factura.objects.get(pk = request.POST["id"])
-            a.id_factura = request.POST["id_factura"]
             a.cantidad = request.POST["cantidad"]
             a.total_sin_descuento = request.POST["total_sin_descuento"]
             a.descuento = request.POST["descuento"]
             a.total_con_descuento = request.POST["total_con_descuento"]
-            a.pago = request.POST["pago"]
-            a.usuario = request.POST["usuario"]
-            a.servicios = request.POST["servicios"]
+            a.medio_pago = request.POST["medio_pago"]
+            # a.servicios = request.POST["servicio"]
             a.save()
             messages.success(request,"¡factura Actualizado correctamente!")
             return redirect('Vitario:factura')
@@ -562,6 +630,12 @@ def servicio(request):
     
     return render(request, 'Vitario/servicio/listar_servicio.html', contexto)
 
+def servicioTarjetas(request):
+    
+    q = Servicios.objects.all()
+    contexto = {'datos': q}
+    return render(request, 'Vitario/servicio/tarjeta_servicio.html', contexto)
+
 def servicioBuscar (request):
     
     if request.method == "POST":
@@ -587,10 +661,18 @@ def servicioFormulario(request):
 def servicioGuardar(request):
     try:
         if request.method == "POST":
+            if request.FILES:
+                fss = FileSystemStorage()
+                r = request.FILES["foto"]
+                file = fss.save("vitario/fotos/"+ r.name, r)
+            else:
+                file = "vitario/fotos/defaultMas.png"
+                
             q = Servicios(
-                id_servicio = request.POST["id_servicio"],
+                codigo_servicio = request.POST["codigo_servicio"],
                 nombre_servicio = request.POST["nombre_servicio"],
                 precio_servicio = request.POST["precio_servicio"],
+                foto = file
             )
             q.save()
             messages.success(request,"¡servicio guardado correctamente!")
@@ -605,12 +687,21 @@ def servicioGuardar(request):
 def servicioEliminar(request,id):
     try:
         a = Servicios.objects.get(pk = id)
+        ruta_foto = str(BASE_DIR) + str(a.foto.url)
+        if path.exists(ruta_foto):
+            if a.foto.url != "/uploads/vitario/fotos/defaultMas.png":
+                remove(ruta_foto)
+        else:
+            messages.error(request,"No se pudo eliminar la foto")
+            raise Exception("Error!!! la foto no existe o no se encuentra")
         a.delete()
-        return redirect('Vitario:servicio')
+        messages.success(request,"Servicio eliminado correctamente")
+        return redirect('vitario:servicio')
     except Servicios.DoesNotExist:
-        return HttpResponse('ERROR: servicio no encontrado')
+        messages.error(request,"Error!! el ueuario no existe")
     except Exception as e:
-        return HttpResponse(f'ERROR: {e}')
+        messages.error(request,f'Error!! no se pudo eliminar el registro: {e}')
+
     
 def editarServicio(request, id):
     A = Servicios.objects.get(pk = id)
@@ -621,7 +712,21 @@ def actualizarServicio(request):
     try:
         if request.method == "POST":
             a = Servicios.objects.get(pk = request.POST["id"])
-            a.id_servicio = request.POST["id_servicio"]
+            if request.FILES:
+                ruta_foto = str(BASE_DIR) + str(a.foto.url)
+                if path.exists(ruta_foto):
+                    if a.foto.url != "/uploads/vitario/fotos/defaultMas.png":
+                        remove(ruta_foto)
+                else:
+                    raise Exception("Error!!! la foto no existe o no se encuentra")
+                fss = FileSystemStorage()
+                r = request.FILES["foto"]
+                file = fss.save("vitario/fotos/"+ r.name, r)
+                a.foto = file
+            else:
+                print ("No se cambio la foto")
+                
+            a.codigo_servicio = request.POST["codigo_servicio"]
             a.nombre_servicio = request.POST["nombre_servicio"]
             a.precio_servicio = request.POST["precio_servicio"]
             a.save()
@@ -672,15 +777,21 @@ def citaBuscar (request):
     
 def citaFormulario(request):
     p = Servicios.objects.all()
-    contexto = {'datos':p}
+    
+    q = Usuario.objects.all()
+    
+    contexto = {'datos':p,"user":q}
     return render(request, 'Vitario/cita/crear_cita.html',contexto)
 
 def citaGuardar(request):
     try:
         b = Servicios.objects.get(pk = request.POST["nombre_servicio"])
+        
+        q = Usuario.objects.get(pk = request.POST["nombre"])
+        
         if request.method == "POST":
             q = Citas(
-                id_cita = request.POST["id_cita"],
+                usuario = q,
                 hora_fecha = request.POST["hora_fecha"],
                 servicio = b,
             )
@@ -706,16 +817,20 @@ def citaEliminar(request,id):
     
 def editarCita(request, id):
     A = Citas.objects.get(pk = id)
-    contexto = {"datos":A}
+    
+    b = Servicios.objects.all()
+    
+    q = Usuario.objects.all()
+    contexto = {"datos":A,"user":q, "servi":b}
     return render(request, 'Vitario/cita/editar_cita.html', contexto)
 
 def actualizarCita(request):
     try:
         if request.method == "POST":
             a = Citas.objects.get(pk = request.POST["id"])
-            a.id_cita = request.POST["id_cita"]
+            # a.usuario = request.POST["nombre"]
             a.hora_fecha = request.POST["hora_fecha"]
-            a.servicio = request.POST["servicio"]
+            # a.servicio = request.POST["servicio"]
             a.save()
             messages.success(request,"¡cita Actualizado correctamente!")
             return redirect('Vitario:cita')
@@ -725,6 +840,13 @@ def actualizarCita(request):
     except Exception as e:
         messages.error(request,"Error" + str(e))
         return redirect('Vitario:cita')
+    
+def citaAgendar(request):
+    p = Servicios.objects.all()
+    
+    q = Usuario.objects.all()
+    
+    contexto = {'datos':p,"user":q}
+    return render(request, 'Vitario/cita/agendar_cita.html',contexto)
 
 # =========================================================================================================================================
-

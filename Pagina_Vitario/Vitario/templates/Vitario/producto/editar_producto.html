@@ -2,29 +2,38 @@
 {% extends 'Vitario/base.html' %}
 
 {% block body %}
-
-<h1>MODIFICAR PRODUCTOS <strong> -_- {{ datos.nombre_producto}} -_-</strong></h1>
-
-<form style="text-align:center;" action="{% url 'Vitario:actualizar_producto' %}" method="post">
-    {% csrf_token %}
-
-    <input type="hidden" name="id" value="{{datos.id}}" > 
-
-    <label for="">Codigo del producto</label><br />
-    <input type="text" class="form-control" name="codigo_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.codigo_producto }}"><br/>
-
-    <label for="">Nombre del producto</label><br />
-    <input type="text" class="form-control" name="nombre_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_producto }}"><br/>
-
-    <label for="">Cantidad</label><br />
-    <input type="number" class="form-control" name="cantidad" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.cantidad }}"><br/>
-
-    <label for="">Tipo de producto</label><br/>
-    <input type="text" class="form-control" name="tipo_producto" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.tipo_producto }}"><br/>
-
-    <label for="">Precio</label><br />
-    <input type="number" class="form-control" name="precio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.precio }}"><br/>
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-</form>
+<div class="signup-form">
+    <form  action="{% url 'Vitario:guardar_producto' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>MODIFICAR PRODUCTOS <strong>{{ datos.nombre_producto}}</strong></h2>
+        <div class="form-group">
+            <input type="text" class="form-control" name="codigo_producto" placeholder="Codigo del Prducto" required="required" value="{{ datos.codigo_producto }}">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="nombre_producto" placeholder="Nombre" required="required" value="{{ datos.nombre_producto }}">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" name="cantidad" placeholder="Cantidad" required="required" value="{{ datos.cantidad }}">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" name="precio" placeholder="Precio" required="required" value="{{ datos.precio }}">
+        </div>
+        <div class="form-group">
+            <label for="">Categoria</label>
+                <select class="form-control" name="categoria" value="{{ datos.categoria }}">
+                    <option value="M">Medicamentos</option>
+                    <option value="A">Accesorios</option>
+                    <option value="C">Concentrado</option>
+                    <option value="AP">Alimentos y Premios</option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="text">Foto: </label>
+            <input type="file" class="form-control" name="foto" placeholder="Foto" accept="image/">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-outline-secondary">Guardar</button>
+        </div>
+    </form>
+</div>
 {% endblock  %}

@@ -10,9 +10,10 @@
             <td>#</td>
             <td>Codigo del producto</td>
             <td>Nombre del producto</td>
+            <td>Categoria</td>
             <td>Cantidad</td>
-            <td>Tipo de producto</td>
             <td>precio</td>
+            <td>Foto</td>
             <td>Editar</td>
             <td>Eliminar</td>
         </tr>
@@ -24,9 +25,10 @@
             <td>{{ registro.id }}</td>
             <td>{{ registro.codigo_producto }}</td>
             <td>{{ registro.nombre_producto }}</td>
+            <td>{{ registro.get_categoria_display }}</td>
             <td>{{ registro.cantidad }}</td>
-            <td>{{ registro.tipo_producto }}</td>
             <td>{{ registro.precio }}</td>
+            <td><img src="{{ registro.foto.url }} " style="width: 7%;"></td>
             <td>
                 <a class="btn btn-primary" href="{% url 'Vitario:editar_producto' registro.id %}"> editar</a>
             </td>

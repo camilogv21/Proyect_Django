@@ -10,11 +10,31 @@
 
     <input type="hidden" name="id" value="{{datos.id}}" >
 
-    <label for="">Id de la cita</label><br />
-    <input type="text" class="form-control" name="id_cita" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_cita }}"><br/>
+    <!-- <label for="">Usuario</label><br />
+    <select class="form-control" name="nombre" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre }}">
+        {% if user %}
+            {% for registro in user %}
+                <option value="{{registro.id}}">{{registro.nombre}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/> -->
 
     <label for="">Hora y fecha</label><br />
-    <input type="date" class="form-control" name="hora_fecha" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.hora_fecha }}"><br/>
+    <input type="datetime-local" class="form-control" name="hora_fecha" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.hora_fecha }}"><br/>
+
+    <!-- <label for="">Servicio</label><br />
+    <select class="form-control" name="nombre_servicio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_servicio }}">
+        {% if servi %}
+            {% for registro in servi %}
+                <option value="{{registro.id}}">{{registro.nombre_servicio}}</option>
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </select><br/> -->
+
 
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>

@@ -7,7 +7,7 @@
     <thead>
         <tr>
             <td>ID</td>
-            <td>Id de la cita</td>
+            <td>Usuario</td>
             <td>Hora y fecha</td>
             <td>Servicio</td>
             <td>Editar</td>
@@ -19,7 +19,7 @@
         {% for registro in page_obj %}
         <tr>
             <td>{{ registro.id }}</td>
-            <td>{{ registro.id_cita }}</td>
+            <td>{{ registro.nombre }}</td>
             <td>{{ registro.hora_fecha }}</td>
             <td>{{ registro.servicio }}</td>
             <td>

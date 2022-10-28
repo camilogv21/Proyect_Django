@@ -5,19 +5,22 @@
 
 <h1>MODIFICAR SERVICIOS <strong> -_- {{ datos.nombre_servicio }} -_-</strong></h1>
 
-<form style="text-align:center;" action="{% url 'Vitario:actualizar_servicio' %}" method="post">
+<form style="text-align:center;" action="{% url 'Vitario:actualizar_servicio' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <input type="hidden" name="id" value="{{datos.id}}" >
 
-    <label for="">Id del servicio</label><br />
-    <input type="text" class="form-control" name="id_servicio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_servicio }}"><br/>
+    <label for="">Codigo del servicio</label><br />
+    <input type="text" class="form-control" name="codigo_servicio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.codigo_servicio }}"><br/>
 
     <label for="">Nombre del servicio</label><br />
     <input type="text" class="form-control" name="nombre_servicio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_servicio }}"><br/>
 
     <label for="">Precio del servicio</label><br />
     <input type="number" class="form-control" name="precio_servicio" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.precio_servicio }}"><br/>
+
+    <label for="">Foto</label><br />
+    <input type="file" class="form-control" name="foto" style="width:70%; margin-left: auto; margin-right:auto;"><br/>
 
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>

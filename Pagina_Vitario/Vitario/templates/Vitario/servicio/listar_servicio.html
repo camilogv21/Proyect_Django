@@ -23,9 +23,10 @@
     <thead>
         <tr>
             <td>ID</td>
-            <td>Id del servicio</td>
+            <td>Codigo del servicio</td>
             <td>Nombre del servicio</td>
             <td>Precio</td>
+            <td>Foto</td>
             <td>Editar</td>
             <td>Eliminar</td>
         </tr>
@@ -35,9 +36,10 @@
         {% for registro in page_obj %}
         <tr>
             <td>{{ registro.id }}</td>
-            <td>{{ registro.id_servicio }}</td>
+            <td>{{ registro.codigo_servicio }}</td>
             <td>{{ registro.nombre_servicio }}</td>
             <td>{{ registro.precio_servicio }}</td>
+            <td><img src="{{ registro.foto.url }} " style="width: 7%;"></td>
             <td>
                 <a class="btn btn-primary" href="{% url 'Vitario:editar_servicio' registro.id %}"> editar</a>
             </td>

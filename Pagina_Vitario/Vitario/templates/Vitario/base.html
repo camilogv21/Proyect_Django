@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="{% static 'Vitario/css/index.css'%}">
     <link rel="stylesheet" href="{% static 'Vitario/css/login.css'%}">
     <link rel="stylesheet" href="{% static 'Vitario/css/form.css'%}">
+    <link rel="stylesheet" href="{% static 'Vitario/css/tarjeta.css'%}">
+    {% comment %} Bootstrap 5.2 {% endcomment %}
+    <link rel="stylesheet" href="{% static 'Vitario/bootstrap-icons-1.9.1/bootstrap-icons.css'%}">
     {% comment %} Bootstrap 5.2 {% endcomment %}
     <link rel="stylesheet" href="{% static 'Vitario/css/bootstrap.min.css'%}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'vitario/favicon_io/apple-touch-icon.png' %}">
@@ -33,11 +36,11 @@
 
         <a href="{% url 'Vitario:inicio' %}">
         <img src="{% static 'Vitario/img/logo.svg' %}" width="300" alt="logo vitario">
-        </a>
+        </a><!-- 
     
         <div id="perro">
         <img src="{% static 'Vitario/img/logo2.svg' %}" width="100" alt="logo vitario" />
-        </div>
+        </div> -->
     </div>
     <nav class="navbar navbar-expand-sm  navbar-light">
     
@@ -47,26 +50,15 @@
             <a class="nav-link" href="{% url 'Vitario:inicio' %}"> Inicio </a>
         </li>
     
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'Vitario:tarjetaservicio' %}">
             Servicios
             </a>
-            <div class="dropdown-menu">
-            <!--<a class="dropdown-item" href="html/spamascotas.html">Spa Mascotas</a>
-            <a class="dropdown-item" href="html/consulta.html">Consulta</a>
-            <a class="dropdown-item" href="html/guarderia.html">Guarderia</a>-->
-            </div>
         </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'Vitario:tarjetaproducto' %}">
             Productos
             </a>
-            <div class="dropdown-menu">
-            <!--<a class="dropdown-item" href="html/snack.html">Snack</a>
-            <a class="dropdown-item" href="html/accesorios.html">Accesorios</a>
-            <a class="dropdown-item" href="html/medicamentos.html">Medicamentos</a>
-            <a class="dropdown-item" href="html/concentrado.html">Concentrado</a>-->
-            </div>
         </li>
         {% endif %}
         {% if request.session.logueo.3 == "Administrador" or request.session.logueo.3 == "Empleado" %}
@@ -75,13 +67,19 @@
             Listar
             </a>
             <div class="dropdown-menu">
+                {% if request.session.logueo.3 == "Administrador" %}
                 <a class="dropdown-item" href="{% url 'Vitario:usuario' %}">Usuarios</a>
                 <a class="dropdown-item" href="{% url 'Vitario:mascota' %}">Mascotas</a>
-                <a class="dropdown-item" href="{% url 'Vitario:pago' %}">Pagos</a>
                 <a class="dropdown-item" href="{% url 'Vitario:producto' %}">Productos</a>
                 <a class="dropdown-item" href="{% url 'Vitario:factura' %}">Facturas</a>
                 <a class="dropdown-item" href="{% url 'Vitario:servicio' %}">Servicios</a>
                 <a class="dropdown-item" href="{% url 'Vitario:cita' %}">Citas</a>
+                {% endif %}
+                {% if request.session.logueo.3 == "Empleado" %}
+                <a class="dropdown-item" href="{% url 'Vitario:mascota' %}">Mascotas</a>
+                <a class="dropdown-item" href="{% url 'Vitario:producto' %}">Productos</a>
+                <a class="dropdown-item" href="{% url 'Vitario:servicio' %}">Servicios</a>
+                {% endif %}
             </div>
         </li>
         {% endif %}
@@ -90,13 +88,18 @@
         {% if request.session.logueo %}
 
         <li class="nav-item">
+            <a class="nav-link" href="{% url 'Vitario:perfil' %}">
+            <button type="button" class="btn btn-outline-secondary">hola</button>
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'Vitario:login_cerrar' %}">
             <button type="button" class="btn btn-outline-secondary">Cerrar Sesion</button>
             </a>
         </li>
         {% else %}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'Vitario:crear_usuario' %}">
+            <a class="nav-link" href="{% url 'Vitario:Registro' %}">
             <button type="button" class="btn btn-outline-secondary">Registro</button>
             </a>
         </li>
@@ -106,7 +109,11 @@
             </a>
         </li>
         {% endif %}
-
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'Vitario:agendar_cita' %}">
+            <button type="button" class="btn btn-outline-secondary">Agendar Citas</button>
+            </a>
+        </li>
         </ul>
     </nav>
     </div>

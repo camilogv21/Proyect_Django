@@ -9,10 +9,7 @@
     {% csrf_token %}
 
     <input type="hidden" name="id" value="{{datos.id}}" >
-
-    <label for="">Id de la mascota</label><br />
-    <input type="text" class="form-control" name="id_mascota" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.id_mascota }}"><br/>
-
+    
     <label for="">Nombre de la mascota</label><br />
     <input type="text" class="form-control" name="nombre_mascota" style="width:70%; margin-left: auto; margin-right:auto;" value="{{ datos.nombre_mascota }}"><br/>
 

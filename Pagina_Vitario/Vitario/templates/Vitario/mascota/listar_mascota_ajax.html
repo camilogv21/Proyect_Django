@@ -7,8 +7,7 @@
     <thead>
         <tr>
             
-            <td>ID</td>
-            <td>ID DE La MASCOTA</td>
+            <td>Id</td>
             <td>NOMBRE</td>
             <td>TIPO</td>
             <td>EDAD</td>
@@ -22,7 +21,6 @@
         {% for registro in page_obj %}
         <tr>
             <td>{{ registro.id }}</td>
-            <td>{{ registro.id_mascota }}</td>
             <td>{{ registro.nombre_mascota }}</td>
             <td>{{ registro.tipo_mascota }}</td>
             <td>{{ registro.edad }}</td>

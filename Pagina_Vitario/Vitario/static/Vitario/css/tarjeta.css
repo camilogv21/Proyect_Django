@@ -1,0 +1,71 @@
+#tabla {
+    text-align: center;
+}
+
+#card {
+    background-color: #eed2df;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 350px;
+}
+
+#tarjeta {
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 350px;
+}
+
+.produc {
+    width: 350px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 8px 8px 8px #000000;
+    background-color: rgb(203, 201, 201);
+    margin: 0 auto;
+}
+
+
+img:hover {
+    box-shadow: 10px 10px 10px #000000;
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+h4 {
+    color: rgb(0, 0, 0);
+    text-align: left;
+}
+
+.linea {
+    border-top: 1px solid black;
+    height: 2px;
+    max-width: 250px;
+    padding: 0;
+    margin: 20px auto 0 auto;
+}
+
+.linea2 {
+    border-top: 1px solid black;
+    height: 30px;
+    max-width: 150px;
+    padding: 0;
+    margin: 20px auto 0 auto;
+}
+
+button .btn:hover {
+    background-color: #999;
+}
+
+#carrito{
+    align-items: center; 
+}
+
+#carro img{
+    width: 70px;
+    height: 80px;
+}
+
