@@ -6,11 +6,20 @@
         {% if datos %}
             {% for i in datos %}
                 <div class="card" id="card">
-                    <img src="{{ i.foto.url }}" class="card-img-top" alt="...">
+                    <h3>Servicio</h3>
+                    <div class="linea"></div>
+                    <h5 class="card-title">{{ i.nombre_servicio }}</h5>
+                    <img id="img-card" src="{{ i.foto.url }}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">{{ i.nombre_servicio }}</h5>
-                        <p class="card-text">${{ i.precio_servicio }}</p>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#agendar" href="{% url 'Vitario:crear_cita' %}">Agendar cita</button>
+                        <h4>Precio:</h4>
+                        <h5>${{ i.precio_servicio }}</h5>
+                        <div class="linea"></div>
+                        <br>
+                        {% if request.session.logueo %}
+                        <a class="btn btn-info" href="{% url 'Vitario:apartarCita' %}">Agendar cita</a>
+                        {% else %}
+                        <a class="btn btn-info" href="{% url 'Vitario:loginForm' %}">Iniciar session para agendar una cita</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

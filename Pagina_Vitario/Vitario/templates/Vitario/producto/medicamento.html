@@ -1,0 +1,31 @@
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+    <div id="tabla">
+        {% if datos %}
+            {% for i in datos %}
+                {% if i.categoria == "M" %}
+                    <div class="card produc" id="card">
+                        <h3>PRODUCTO</h3>
+                        <div class="linea"></div>
+                        <h5 class="card-title">{{ i.nombre_producto }}</h5>
+                        <img id="img-card" src="{{ i.foto.url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h4>Precio:</h4>
+                            <h5>${{ i.precio }}</h5>
+                            <div class="linea"></div>
+                            <h4> CATEGORIA:</h4>
+                            <h5>{{ i.get_categoria_display }}</h5>
+                            <div class="linea"></div>
+                            <br>
+                            <a class="btn btn-primary" href="{% url 'Vitario:agregar' i.id %}">Añadir al carrito <i class="bi bi-cart3"></i></a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h1>No hay datos</h1>
+        {% endif %}
+    </div>
+{% endblock  %}

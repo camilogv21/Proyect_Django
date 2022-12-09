@@ -1,3 +1,10 @@
+html {
+    min-height: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
 /*============================Body==============================*/
 
 body {
@@ -6,6 +13,10 @@ body {
     background-size: cover;
     filter: opacity(150%);
     position: relative; 
+    margin: 0;
+    margin-bottom: 40px;
+    padding: 0;
+    height: 100%;
 }  
 
 /*============================nav==============================*/
@@ -50,9 +61,11 @@ nav.navbar{
 
 /*============================Footer==============================*/
 
-footer{
+.footer {
     background-color: #718fca;
-    padding: 1em 0;
-    text-align: center;
-    margin-top: auto;
+    bottom: 0%;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    padding: 18px 0;
 }

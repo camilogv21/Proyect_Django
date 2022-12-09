@@ -1,4 +1,3 @@
-
 {% extends 'Vitario/base.html' %}
 
 {% block body %}
@@ -11,17 +10,16 @@
                         <h3>PRODUCTO</h3>
                         <div class="linea"></div>
                         <h5 class="card-title">{{ i.nombre_producto }}</h5>
-                        <div class="linea2"></div>
-                        <img src="{{ i.foto.url }}" class="card-img-top" alt="...">
+                        <img id="img-card" src="{{ i.foto.url }}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h4>Precio:</h4>
                             <h5>${{ i.precio }}</h5>
                             <div class="linea"></div>
                             <h4> CATEGORIA:</h4>
-                            <p>{{ i.get_categoria_display }}</p>
+                            <h5>{{ i.get_categoria_display }}</h5>
                             <div class="linea"></div>
                             <br>
-                            <button button type="button" class="btn btn-info" data-toggle="modal" data-target="#agendar">Añadir al carrito <i class="bi bi-cart3"></i></button>
+                            <a class="btn btn-primary" href="{% url 'Vitario:agregar' i.id %}">Añadir al carrito <i class="bi bi-cart3"></i></a>
                         </div>
                     </div>
                 {% endif %}

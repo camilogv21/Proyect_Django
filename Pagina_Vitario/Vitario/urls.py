@@ -1,4 +1,3 @@
-from unicodedata import name
 from django.urls import path
 
 from . import views
@@ -36,7 +35,10 @@ urlpatterns = [
     path('editarProducto/<int:id>',views.editarProducto, name="editar_producto"),
     path('actualizarProducto/',views.actualizarProducto, name="actualizar_producto"),
     path('BuscarProducto/',views.productoBuscar, name="Buscar_producto"),
-    path('tarjeta_producto/', views.productoConcentrado, name="tarjetaproducto"),
+    path('concentrado/', views.productoConcentrado, name="concentrado"),
+    path('accesorio/', views.productoAccesorio, name="accesorio"),
+    path('medicamento/', views.productoMedicamento, name="medicamento"),
+    path('premio/', views.productoPremios, name="premio"),
     
     path('factura/', views.factura, name="factura"),
     path('crear_factura/', views.facturaFormulario, name="crear_factura"),
@@ -62,8 +64,17 @@ urlpatterns = [
     path('editarCita/<int:id>',views.editarCita, name="editar_cita"),
     path('actualizarCita/',views.actualizarCita, name="actualizar_cita"),
     path('BuscarCita/',views.citaBuscar, name="Buscar_cita"),
-    path('agendar_cita/', views.citaAgendar, name="agendar_cita"),
+    path('agendar/', views.Agendar, name="agendar"),
+    path('veragenda/<str:fecha>/', views.verAgenda, name="veragenda"),
+    path('guardaragenda/<str:fecha>/', views.guardarAgenda, name="guardaragenda"),
+    path('apartarCita/', views.apartarCita, name="apartarCita"),
+    path('formularioApartarCita/<int:empleado>', views.formularioApartarCitas, name="formularioApartarCita"),
     
     path('perfil/',views.perfil, name="perfil"),
     path('actualizarPerfil/',views.actualizarPerfil, name="actualizar_perfil"),
+    
+    path('carrito/',views.carritoCompra, name="carrito"),
+    path('agregar/<int:producto_id>/',views.agregar_producto, name="agregar"),
+    path('restar/<int:producto_id>/',views.restar_producto, name="restar"),
+    path('limpiar/',views.limpiar_carrito, name="limpiar"),
 ]

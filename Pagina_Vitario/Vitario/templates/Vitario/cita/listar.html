@@ -1,0 +1,36 @@
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+
+<h1>AGENDAS</h1>
+
+
+{% if datos %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Fecha Inicio</td>
+                <td colspan="2">Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in datos %}
+            <tr>
+                <td>{{ registro.fecha_inicio }}</td>
+                <td>
+                    <a class="btn btn-warning" href="{% url 'Vitario:veragenda' registro.fecha_inicio %}">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% else %}
+    <h1>No hay Agendas</h1>
+{% endif %}
+
+</div>
+
+{% endblock %}

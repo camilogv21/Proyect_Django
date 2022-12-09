@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Vitario.migrations package &#8212; documentación de Vitario - 2.7.18</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.migrations package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="vitario-migrations-package">
+<h1>Vitario.migrations package<a class="headerlink" href="#vitario-migrations-package" title="Enlace permanente a este encabezado">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Enlace permanente a este encabezado">¶</a></h2>
+</section>
+<section id="module-Vitario.migrations.0001_initial">
+<span id="vitario-migrations-0001-initial-module"></span><h2>Vitario.migrations.0001_initial module<a class="headerlink" href="#module-Vitario.migrations.0001_initial" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0001_initial.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0001_initial.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0001_initial.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0001_initial.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0001_initial.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#Vitario.migrations.0001_initial.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0001_initial.Migration.initial">
+<span class="sig-name descname"><span class="pre">initial</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#Vitario.migrations.0001_initial.Migration.initial" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0001_initial.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;CreateModel</span>&#160; <span class="pre">name='Pago',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_pago',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('medio_pago',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Producto',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('codigo_producto',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre_producto',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('cantidad',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('tipo_producto',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('precio',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Servicios',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_servicio',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre_servicio',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('precio_servicio',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Usuario',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('cedula',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('direccion',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('telefono',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('correo',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('usuario',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('clave',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('rol',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Mascota',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_mascota',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre_mascota',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('tipo_mascota',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;),</span> <span class="pre">('edad',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('usuario',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Factura',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_factura',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('cantidad',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('total_sin_descuento',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('descuento',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('total_con_descuento',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre_producto',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;),</span> <span class="pre">('pago',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;),</span> <span class="pre">('servicios',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;),</span> <span class="pre">('usuario',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;)]&gt;,</span> <span class="pre">&lt;CreateModel</span>&#160; <span class="pre">name='Citas',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_cita',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('hora_fecha',</span> <span class="pre">&lt;django.db.models.fields.DateTimeField&gt;),</span> <span class="pre">('servicio',</span> <span class="pre">&lt;django.db.models.fields.related.ForeignKey&gt;)]&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0001_initial.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0002_remove_usuario_cedula">
+<span id="vitario-migrations-0002-remove-usuario-cedula-module"></span><h2>Vitario.migrations.0002_remove_usuario_cedula module<a class="headerlink" href="#module-Vitario.migrations.0002_remove_usuario_cedula" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0002_remove_usuario_cedula.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0002_remove_usuario_cedula.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0002_remove_usuario_cedula.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0002_remove_usuario_cedula.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0002_remove_usuario_cedula.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0001_initial')]</span></em><a class="headerlink" href="#Vitario.migrations.0002_remove_usuario_cedula.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0002_remove_usuario_cedula.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;RemoveField</span>&#160; <span class="pre">model_name='usuario',</span> <span class="pre">name='cedula'&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0002_remove_usuario_cedula.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0003_alter_usuario_telefono">
+<span id="vitario-migrations-0003-alter-usuario-telefono-module"></span><h2>Vitario.migrations.0003_alter_usuario_telefono module<a class="headerlink" href="#module-Vitario.migrations.0003_alter_usuario_telefono" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0003_alter_usuario_telefono.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0003_alter_usuario_telefono.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0003_alter_usuario_telefono.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0003_alter_usuario_telefono.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0003_alter_usuario_telefono.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0002_remove_usuario_cedula')]</span></em><a class="headerlink" href="#Vitario.migrations.0003_alter_usuario_telefono.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0003_alter_usuario_telefono.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='usuario',</span> <span class="pre">name='telefono',</span> <span class="pre">field=&lt;django.db.models.fields.IntegerField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0003_alter_usuario_telefono.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0004_alter_usuario_telefono">
+<span id="vitario-migrations-0004-alter-usuario-telefono-module"></span><h2>Vitario.migrations.0004_alter_usuario_telefono module<a class="headerlink" href="#module-Vitario.migrations.0004_alter_usuario_telefono" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0004_alter_usuario_telefono.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0004_alter_usuario_telefono.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0004_alter_usuario_telefono.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0004_alter_usuario_telefono.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0004_alter_usuario_telefono.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0003_alter_usuario_telefono')]</span></em><a class="headerlink" href="#Vitario.migrations.0004_alter_usuario_telefono.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0004_alter_usuario_telefono.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='usuario',</span> <span class="pre">name='telefono',</span> <span class="pre">field=&lt;django.db.models.fields.IntegerField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0004_alter_usuario_telefono.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0005_alter_usuario_rol">
+<span id="vitario-migrations-0005-alter-usuario-rol-module"></span><h2>Vitario.migrations.0005_alter_usuario_rol module<a class="headerlink" href="#module-Vitario.migrations.0005_alter_usuario_rol" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0005_alter_usuario_rol.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0005_alter_usuario_rol.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0005_alter_usuario_rol.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0005_alter_usuario_rol.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0005_alter_usuario_rol.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0004_alter_usuario_telefono')]</span></em><a class="headerlink" href="#Vitario.migrations.0005_alter_usuario_rol.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0005_alter_usuario_rol.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='usuario',</span> <span class="pre">name='rol',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0005_alter_usuario_rol.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more">
+<span id="vitario-migrations-0006-categoria-remove-producto-tipo-producto-and-more-module"></span><h2>Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more module<a class="headerlink" href="#module-Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0006_categoria_remove_producto_tipo_producto_and_more.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0005_alter_usuario_rol')]</span></em><a class="headerlink" href="#Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;CreateModel</span>&#160; <span class="pre">name='Categoria',</span> <span class="pre">fields=[('id',</span> <span class="pre">&lt;django.db.models.fields.BigAutoField&gt;),</span> <span class="pre">('id_categoria',</span> <span class="pre">&lt;django.db.models.fields.IntegerField&gt;),</span> <span class="pre">('nombre_categoria',</span> <span class="pre">&lt;django.db.models.fields.CharField&gt;)]&gt;,</span> <span class="pre">&lt;RemoveField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='tipo_producto'&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='citas',</span> <span class="pre">name='usuario',</span> <span class="pre">field=&lt;django.db.models.fields.related.ForeignKey&gt;&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='nombre_categoria',</span> <span class="pre">field=&lt;django.db.models.fields.related.ForeignKey&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0006_categoria_remove_producto_tipo_producto_and_more.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria">
+<span id="vitario-migrations-0007-alter-citas-usuario-alter-producto-nombre-categoria-module"></span><h2>Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria module<a class="headerlink" href="#module-Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0007_alter_citas_usuario_alter_producto_nombre_categoria.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0006_categoria_remove_producto_tipo_producto_and_more')]</span></em><a class="headerlink" href="#Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='citas',</span> <span class="pre">name='usuario',</span> <span class="pre">field=&lt;django.db.models.fields.related.ForeignKey&gt;&gt;,</span> <span class="pre">&lt;AlterField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='nombre_categoria',</span> <span class="pre">field=&lt;django.db.models.fields.related.ForeignKey&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0007_alter_citas_usuario_alter_producto_nombre_categoria.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more">
+<span id="vitario-migrations-0008-rename-id-categoria-categoria-codigo-categoria-and-more-module"></span><h2>Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more module<a class="headerlink" href="#module-Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0008_rename_id_categoria_categoria_codigo_categoria_and_more.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0007_alter_citas_usuario_alter_producto_nombre_categoria')]</span></em><a class="headerlink" href="#Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;RenameField</span>&#160; <span class="pre">model_name='categoria',</span> <span class="pre">old_name='id_categoria',</span> <span class="pre">new_name='codigo_categoria'&gt;,</span> <span class="pre">&lt;RenameField</span>&#160; <span class="pre">model_name='servicios',</span> <span class="pre">old_name='id_servicio',</span> <span class="pre">new_name='codigo_servicio'&gt;,</span> <span class="pre">&lt;RemoveField</span>&#160; <span class="pre">model_name='citas',</span> <span class="pre">name='id_cita'&gt;,</span> <span class="pre">&lt;RemoveField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='id_factura'&gt;,</span> <span class="pre">&lt;RemoveField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='pago'&gt;,</span> <span class="pre">&lt;RemoveField</span>&#160; <span class="pre">model_name='mascota',</span> <span class="pre">name='id_mascota'&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='medio_pago',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;,</span> <span class="pre">&lt;DeleteModel</span>&#160; <span class="pre">name='Pago'&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0008_rename_id_categoria_categoria_codigo_categoria_and_more.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0009_alter_factura_medio_pago">
+<span id="vitario-migrations-0009-alter-factura-medio-pago-module"></span><h2>Vitario.migrations.0009_alter_factura_medio_pago module<a class="headerlink" href="#module-Vitario.migrations.0009_alter_factura_medio_pago" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0009_alter_factura_medio_pago.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0009_alter_factura_medio_pago.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0009_alter_factura_medio_pago.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0009_alter_factura_medio_pago.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0009_alter_factura_medio_pago.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0008_rename_id_categoria_categoria_codigo_categoria_and_more')]</span></em><a class="headerlink" href="#Vitario.migrations.0009_alter_factura_medio_pago.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0009_alter_factura_medio_pago.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='medio_pago',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0009_alter_factura_medio_pago.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0010_alter_factura_medio_pago">
+<span id="vitario-migrations-0010-alter-factura-medio-pago-module"></span><h2>Vitario.migrations.0010_alter_factura_medio_pago module<a class="headerlink" href="#module-Vitario.migrations.0010_alter_factura_medio_pago" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0010_alter_factura_medio_pago.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0010_alter_factura_medio_pago.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0010_alter_factura_medio_pago.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0010_alter_factura_medio_pago.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0010_alter_factura_medio_pago.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0009_alter_factura_medio_pago')]</span></em><a class="headerlink" href="#Vitario.migrations.0010_alter_factura_medio_pago.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0010_alter_factura_medio_pago.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='medio_pago',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0010_alter_factura_medio_pago.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto">
+<span id="vitario-migrations-0011-producto-foto-servicios-foto-usuario-foto-module"></span><h2>Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto module<a class="headerlink" href="#module-Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0011_producto_foto_servicios_foto_usuario_foto.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0010_alter_factura_medio_pago')]</span></em><a class="headerlink" href="#Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AddField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='foto',</span> <span class="pre">field=&lt;django.db.models.fields.files.ImageField&gt;&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='servicios',</span> <span class="pre">name='foto',</span> <span class="pre">field=&lt;django.db.models.fields.files.ImageField&gt;&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='usuario',</span> <span class="pre">name='foto',</span> <span class="pre">field=&lt;django.db.models.fields.files.ImageField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0011_producto_foto_servicios_foto_usuario_foto.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0012_auto_20221028_1012">
+<span id="vitario-migrations-0012-auto-20221028-1012-module"></span><h2>Vitario.migrations.0012_auto_20221028_1012 module<a class="headerlink" href="#module-Vitario.migrations.0012_auto_20221028_1012" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0012_auto_20221028_1012.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0012_auto_20221028_1012.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0012_auto_20221028_1012.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0012_auto_20221028_1012.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0012_auto_20221028_1012.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0011_producto_foto_servicios_foto_usuario_foto')]</span></em><a class="headerlink" href="#Vitario.migrations.0012_auto_20221028_1012.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0012_auto_20221028_1012.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;RemoveField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='nombre_categoria'&gt;,</span> <span class="pre">&lt;AddField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='categoria',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;,</span> <span class="pre">&lt;DeleteModel</span>&#160; <span class="pre">name='Categoria'&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0012_auto_20221028_1012.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0013_alter_factura_servicios">
+<span id="vitario-migrations-0013-alter-factura-servicios-module"></span><h2>Vitario.migrations.0013_alter_factura_servicios module<a class="headerlink" href="#module-Vitario.migrations.0013_alter_factura_servicios" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0013_alter_factura_servicios.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0013_alter_factura_servicios.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0013_alter_factura_servicios.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0013_alter_factura_servicios.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0013_alter_factura_servicios.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0012_auto_20221028_1012')]</span></em><a class="headerlink" href="#Vitario.migrations.0013_alter_factura_servicios.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0013_alter_factura_servicios.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='factura',</span> <span class="pre">name='servicios',</span> <span class="pre">field=&lt;django.db.models.fields.related.ForeignKey&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0013_alter_factura_servicios.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations.0014_alter_producto_categoria">
+<span id="vitario-migrations-0014-alter-producto-categoria-module"></span><h2>Vitario.migrations.0014_alter_producto_categoria module<a class="headerlink" href="#module-Vitario.migrations.0014_alter_producto_categoria" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Vitario.migrations.0014_alter_producto_categoria.Migration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Vitario.migrations.0014_alter_producto_categoria.</span></span><span class="sig-name descname"><span class="pre">Migration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Vitario/migrations/0014_alter_producto_categoria.html#Migration"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#Vitario.migrations.0014_alter_producto_categoria.Migration" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Migration</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0014_alter_producto_categoria.Migration.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('Vitario',</span> <span class="pre">'0013_alter_factura_servicios')]</span></em><a class="headerlink" href="#Vitario.migrations.0014_alter_producto_categoria.Migration.dependencies" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Vitario.migrations.0014_alter_producto_categoria.Migration.operations">
+<span class="sig-name descname"><span class="pre">operations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;AlterField</span>&#160; <span class="pre">model_name='producto',</span> <span class="pre">name='categoria',</span> <span class="pre">field=&lt;django.db.models.fields.CharField&gt;&gt;]</span></em><a class="headerlink" href="#Vitario.migrations.0014_alter_producto_categoria.Migration.operations" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Vitario.migrations">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Vitario.migrations" title="Enlace permanente a este encabezado">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Tabla de contenido</a></h3>
+
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/Vitario.migrations.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.migrations package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2022, Juan Camilo Galeano Velez.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,444 @@
+{% extends 'Vitario/base.html' %}
+
+{% block body %}
+    <p>Agenda del {{ fecha }}</p>
+    <br>
+
+
+
+    <form action="{% url 'Vitario:guardaragenda' fecha %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Guardar</button><br/><br/>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Domingo</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>8:00 - 8:59</td>
+                    <td>
+                        <a id="enlace_D8" onclick="checksAgenda(document.getElementById('enlace_D8'), document.getElementById('D8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 8 and i.reservado and estado %}
+                                    btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "D" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button" >Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="D-8" id="D8"
+                        {% for i in datos %}
+                            {% if i.dia == "D" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                    <td>
+                        <a id="enlace_L8" onclick="checksAgenda(document.getElementById('enlace_L8'), document.getElementById('L8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "L" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "L" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="L-8" id="L8"
+                        {% for i in datos %}
+                            {% if i.dia == "L" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_M8" onclick="checksAgenda(document.getElementById('enlace_M8'), document.getElementById('M8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "M" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "M" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="M-8" id="M8"
+                        {% for i in datos %}
+                            {% if i.dia == "M" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_X8" onclick="checksAgenda(document.getElementById('enlace_X8'), document.getElementById('X8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "X" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "X" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="X-8" id="X8"
+                        {% for i in datos %}
+                            {% if i.dia == "X" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_J8" onclick="checksAgenda(document.getElementById('enlace_J8'), document.getElementById('J8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "J" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "J" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="J-8" id="J8"
+                        {% for i in datos %}
+                            {% if i.dia == "J" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_V8" onclick="checksAgenda(document.getElementById('enlace_V8'), document.getElementById('V8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "V" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "V" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="V-8" id="V8"
+                        {% for i in datos %}
+                            {% if i.dia == "V" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_S8" onclick="checksAgenda(document.getElementById('enlace_S8'), document.getElementById('S8'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "S" and i.hora == 8 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "S" and i.hora == 8 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="S-8" id="S8"
+                        {% for i in datos %}
+                            {% if i.dia == "S" and i.hora == 8 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>9:00 - 9:59</td>
+                    <td>
+                        <a id="enlace_D9" onclick="checksAgenda(document.getElementById('enlace_D9'), document.getElementById('D9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "D" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="D-9" id="D9"
+                        {% for i in datos %}
+                            {% if i.dia == "D" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                    <td>
+                        <a id="enlace_L9" onclick="checksAgenda(document.getElementById('enlace_L9'), document.getElementById('L9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "L" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="L-9" id="L9"
+                        {% for i in datos %}
+                            {% if i.dia == "L" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_M9" onclick="checksAgenda(document.getElementById('enlace_M9'), document.getElementById('M9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "M" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="M-9" id="M9"
+                        {% for i in datos %}
+                            {% if i.dia == "M" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_X9" onclick="checksAgenda(document.getElementById('enlace_X9'), document.getElementById('X9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "X" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="X-9" id="X9"
+                        {% for i in datos %}
+                            {% if i.dia == "X" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_J9" onclick="checksAgenda(document.getElementById('enlace_J9'), document.getElementById('J9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "J" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="J-9" id="J9"
+                        {% for i in datos %}
+                            {% if i.dia == "J" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_V9" onclick="checksAgenda(document.getElementById('enlace_V9'), document.getElementById('V9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "V" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="V-9" id="V9"
+                        {% for i in datos %}
+                            {% if i.dia == "V" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                <td>
+                        <a id="enlace_S9" onclick="checksAgenda(document.getElementById('enlace_S9'), document.getElementById('S9'));" href="#" class="btn btn-outline-primary
+
+                        <!-- caso especial break en for -->
+                        {% load break %}
+                        {% with estado=1 %}
+                            {% for i in datos %}
+                                {% if i.dia == "D" and i.hora == 9 and i.reservado and estado %}
+                                   btn-outline-secondary disabled
+                                    {% changeStatement estado as estado %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <!-- fin caso especial -->
+
+                        {% for i in datos %}
+                            {% if i.dia == "S" and i.hora == 9 %}
+                                active
+                            {% endif %}
+                        {% endfor %}
+                        " role="button" data-bs-toggle="button">Seleccionar</a>
+                        <input type="checkbox" name="agenda[]" value="S-9" id="S9"
+                        {% for i in datos %}
+                            {% if i.dia == "S" and i.hora == 9 %}
+                                checked = "checked"
+                            {% endif %}
+                        {% endfor %}
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+
+{% endblock %}

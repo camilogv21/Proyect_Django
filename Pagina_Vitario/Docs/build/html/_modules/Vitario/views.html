@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vitario.views &#8212; documentación de Vitario - 2.7.18</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.views</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para Vitario.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span><span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Mascota</span><span class="p">,</span> <span class="n">Producto</span><span class="p">,</span> <span class="n">Factura</span><span class="p">,</span> <span class="n">Servicios</span><span class="p">,</span> <span class="n">Citas</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="kn">import</span> <span class="n">FileSystemStorage</span>
+<span class="kn">from</span> <span class="nn">.crypt</span> <span class="kn">import</span> <span class="n">claveEncriptada</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">remove</span><span class="p">,</span> <span class="n">path</span>
+<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+<span class="c1"># Create your views here.</span>
+<span class="c1">#===================================================Perfil==============================================================</span>
+
+<span class="sd">&quot;&quot;&quot;Obtiene la identificación del usuario de la sesión, luego obtiene los datos del usuario de la base</span>
+<span class="sd">de datos y luego los pasa a la plantilla</span>
+<span class="sd">    :param request: El objeto de la solicitud</span>
+<span class="sd">    :return: El perfil del usuario.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="perfil"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.perfil">[documentos]</a><span class="k">def</span> <span class="nf">perfil</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span><span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">login</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;perfil&quot;</span><span class="p">:</span> <span class="n">q</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;Vitario/usuario/perfil.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span></div>
+
+<span class="sd">&quot;&quot;&quot;Actualiza el perfil del usuario.</span>
+<span class="sd">    :param request: El objeto de la solicitud</span>
+<span class="sd">    :return: una redirección a la vista de perfil.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="actualizarPerfil"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarPerfil">[documentos]</a><span class="k">def</span> <span class="nf">actualizarPerfil</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Obtener los datos del usuario de la base de datos y actualizarlos.</span>
+            <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">login</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">q</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">]</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">direccion</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;direccion&quot;</span><span class="p">]</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;telefono&quot;</span><span class="p">]</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">correo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;correo&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">usuario</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">consulta</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">])</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;El usuario ya existe&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;clave&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">clave</span> <span class="o">=</span> <span class="n">claveEncriptada</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;clave&quot;</span><span class="p">])</span>
+
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">login</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">nombre</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">login</span>
+
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Actualizacion correcta&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;No existe el usuario&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No envio datos...&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:perfil&#39;</span><span class="p">)</span></div>
+
+<span class="c1">#=======================================================================================================================</span>
+
+<span class="sd">&quot;&quot;&quot;Toma una solicitud y devuelve una respuesta.</span>
+<span class="sd">    :param request: El objeto de solicitud es un objeto HttpRequest.</span>
+<span class="sd">    :return: La función de renderizado está siendo devuelta.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="inicio"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.inicio">[documentos]</a><span class="k">def</span> <span class="nf">inicio</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/index.html&#39;</span><span class="p">)</span></div>
+
+<span class="c1">#====================================================LOGIN==============================================================</span>
+
+<div class="viewcode-block" id="loginForm"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.loginForm">[documentos]</a><span class="k">def</span> <span class="nf">loginForm</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;Vitario/login/login.html&#39;</span><span class="p">)</span></div>
+
+<span class="sd">&quot;&quot;&quot;En esta funcion nos permite saber i el usuario existe y si existe que inicie sesión y rediríjalo a la página de </span>
+<span class="sd">inicio. y si no existe rediríjalos a la página de inicio de sesión.   </span>
+<span class="sd">    :param request: El objeto de la solicitud</span>
+<span class="sd">    :return: El usuario está siendo devuelto.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.login">[documentos]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+        
+    <span class="k">try</span><span class="p">:</span>
+        
+        <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;usuario&#39;</span><span class="p">]</span>
+        <span class="n">pasw</span> <span class="o">=</span> <span class="n">claveEncriptada</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;clave&quot;</span><span class="p">])</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">user</span><span class="p">,</span> <span class="n">clave</span> <span class="o">=</span> <span class="n">pasw</span><span class="p">)</span>
+        
+        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">rol</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">get_rol_display</span><span class="p">()]</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Bienvenido!!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:inicio&#39;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Hay que ingresar los datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:inicio&#39;</span><span class="p">)</span>   </div>
+
+<span class="sd">&quot;&quot;&quot;Esta funcion elimina la variable de sesión &quot;Cierra la sesión&quot; y redirige a la página de inicio</span>
+<span class="sd">    :param request: El objeto de la solicitud</span>
+<span class="sd">    :return: la función de redirección.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="loginC"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.loginC">[documentos]</a><span class="k">def</span> <span class="nf">loginC</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueo&quot;</span><span class="p">]</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Session cerrada&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Ocurrio un error: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:inicio&#39;</span><span class="p">)</span></div>
+
+<span class="c1">#=======================================================================================================================</span>
+
+<span class="c1"># ===============================================USUARIOS===============================================================</span>
+
+<span class="sd">&quot;&quot;&quot;Esta funcion consulta si el usuario ha iniciado sesión y es administrador o empleado y que muestre la lista </span>
+<span class="sd">de usuarios. Si el usuario no ha iniciado sesión o no es administrador o empleado, se le redirige a la página de inicio </span>
+<span class="sd">de sesión.</span>
+<span class="sd">    :param request: El objeto de la solicitud</span>
+<span class="sd">    :return:un objeto de renderizado.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="usuario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuario">[documentos]</a><span class="k">def</span> <span class="nf">usuario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span> <span class="ow">and</span> <span class="p">(</span><span class="n">login</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Administrador&quot;</span> <span class="ow">or</span> <span class="n">login</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Empleado&quot;</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/usuario/listar_usuario.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">login</span> <span class="ow">and</span> <span class="n">login</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Administrador&quot;</span> <span class="ow">and</span> <span class="n">login</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Empleado&quot;</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;usted no esta autorizados para este modulo&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:inicio&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>    
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No has iniciado session&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:loginForm&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="usuarioBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuarioBuscar">[documentos]</a><span class="k">def</span> <span class="nf">usuarioBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">nombre__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span><span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">usuario__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/usuario/listar_usuario_ajax.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="usuarioFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuarioFormulario">[documentos]</a><span class="k">def</span> <span class="nf">usuarioFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/usuario/crear_usuario.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="usuarioGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuarioGuardar">[documentos]</a><span class="k">def</span> <span class="nf">usuarioGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="c1"># crear instacian de file sistem storage</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="c1"># capturar foto de formulario</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="c1"># cargar archivo alservidor</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;vitario/fotos/defaultUsu.png&quot;</span>
+            
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="p">(</span>
+                <span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">],</span>
+                <span class="n">direccion</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;direccion&quot;</span><span class="p">],</span>
+                <span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;telefono&quot;</span><span class="p">],</span>
+                <span class="n">correo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;correo&quot;</span><span class="p">],</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">],</span>
+                <span class="n">clave</span> <span class="o">=</span> <span class="n">claveEncriptada</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;clave&quot;</span><span class="p">]),</span>
+                <span class="n">rol</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;rol&quot;</span><span class="p">],</span>
+                <span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡Usuario guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="usuarioEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuarioEliminar">[documentos]</a><span class="k">def</span> <span class="nf">usuarioEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="c1"># Primero eliminar la foto y despues el usuario</span>
+        <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="c1">#averiguamos si la ruta es validad</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+            <span class="c1">#Borramos la ruta de la foto</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultUsu.png&quot;</span><span class="p">:</span>
+                <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+            <span class="c1"># messages.success(request,&quot;Foto eliminada correctamente&quot;)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;No se pudo eliminar la foto&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Usuario eliminado correctamente&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;vitario:usuario&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error!! el ueuario no existe&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;Error!! no se pudo eliminar el registro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="usuarioRegistro"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.usuarioRegistro">[documentos]</a><span class="k">def</span> <span class="nf">usuarioRegistro</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/usuario/registro.html&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="editarUsuario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarUsuario">[documentos]</a><span class="k">def</span> <span class="nf">editarUsuario</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;datos&quot;</span> <span class="p">:</span> <span class="n">A</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/usuario/editar_usuario.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarUsuario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarUsuario">[documentos]</a><span class="k">def</span> <span class="nf">actualizarUsuario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span> 
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="c1">#Eliminar foto Anterior</span>
+                <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultUsu.png&quot;</span><span class="p">:</span>
+                        <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+                <span class="c1">#Guardar foto Nueva</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;El  usuario no cambio la foto&quot;</span><span class="p">)</span>
+                
+            <span class="n">a</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">direccion</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;direccion&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;telefono&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">correo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;correo&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">usuario</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">rol</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;rol&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡Usuario Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:usuario&#39;</span><span class="p">)</span></div>
+    
+<span class="c1"># ========================================================================================================================================</span>
+
+<span class="c1"># ===================================================MASCOTAS==============================================================================</span>
+
+<div class="viewcode-block" id="mascota"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.mascota">[documentos]</a><span class="k">def</span> <span class="nf">mascota</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/mascota/listar_mascota.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="mascotaBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.mascotaBuscar">[documentos]</a><span class="k">def</span> <span class="nf">mascotaBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">nombre_mascota__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span><span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">tipo_mascota__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/mascota/listar_mascota_ajax.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="mascotaFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.mascotaFormulario">[documentos]</a><span class="k">def</span> <span class="nf">mascotaFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/mascota/crear_mascota.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="mascotaGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.mascotaGuardar">[documentos]</a><span class="k">def</span> <span class="nf">mascotaGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Mascota</span><span class="p">(</span>
+                <span class="n">nombre_mascota</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_mascota&quot;</span><span class="p">],</span>
+                <span class="n">tipo_mascota</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;tipo_mascota&quot;</span><span class="p">],</span>
+                <span class="n">edad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;edad&quot;</span><span class="p">],</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡mascota guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="mascotaEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.mascotaEliminar">[documentos]</a><span class="k">def</span> <span class="nf">mascotaEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;ERROR: mascota no encontrado&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="editarMascota"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarMascota">[documentos]</a><span class="k">def</span> <span class="nf">editarMascota</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span><span class="n">A</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/mascota/editar_mascota.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarMascota"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarMascota">[documentos]</a><span class="k">def</span> <span class="nf">actualizarMascota</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Mascota</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">nombre_mascota</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_mascota&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">tipo_mascota</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;tipo_mascota&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">edad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;edad&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡mascota Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:mascota&#39;</span><span class="p">)</span></div>
+
+<span class="c1"># =========================================================================================================================================</span>
+
+<span class="c1"># ===================================================PRODUCTO==============================================================================</span>
+
+<div class="viewcode-block" id="producto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.producto">[documentos]</a><span class="k">def</span> <span class="nf">producto</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/listar_producto.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoConcentrado"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoConcentrado">[documentos]</a><span class="k">def</span> <span class="nf">productoConcentrado</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/concentrado.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoMedi"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoMedi">[documentos]</a><span class="k">def</span> <span class="nf">productoMedi</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/Medicamentos.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoAcce"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoAcce">[documentos]</a><span class="k">def</span> <span class="nf">productoAcce</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/Accesorios.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoAlimen"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoAlimen">[documentos]</a><span class="k">def</span> <span class="nf">productoAlimen</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/Alimentos.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoBuscar">[documentos]</a><span class="k">def</span> <span class="nf">productoBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">nombre_producto__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span><span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">tipo_producto__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/listar_producto_ajax.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="productoFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoFormulario">[documentos]</a><span class="k">def</span> <span class="nf">productoFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/crear_producto.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="productoGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoGuardar">[documentos]</a><span class="k">def</span> <span class="nf">productoGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;vitario/fotos/defaultPro.png&quot;</span>
+            
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Producto</span><span class="p">(</span>
+                <span class="n">codigo_producto</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;codigo_producto&quot;</span><span class="p">],</span>
+                <span class="n">nombre_producto</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_producto&quot;</span><span class="p">],</span>
+                <span class="n">categoria</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;categoria&quot;</span><span class="p">],</span>
+                <span class="n">cantidad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;cantidad&quot;</span><span class="p">],</span>
+                <span class="n">precio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;precio&quot;</span><span class="p">],</span>
+                <span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡producto guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="productoEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.productoEliminar">[documentos]</a><span class="k">def</span> <span class="nf">productoEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultPro.png&quot;</span><span class="p">:</span>
+                <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;No se pudo eliminar la foto&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Producto eliminado correctamente&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;vitario:producto&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Producto</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error!! el ueuario no existe&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;Error!! no se pudo eliminar el registro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="editarProducto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarProducto">[documentos]</a><span class="k">def</span> <span class="nf">editarProducto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span><span class="n">A</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/producto/editar_producto.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarProducto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarProducto">[documentos]</a><span class="k">def</span> <span class="nf">actualizarProducto</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultPro.png&quot;</span><span class="p">:</span>
+                        <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;No se cambio la foto&quot;</span><span class="p">)</span>
+                
+            <span class="n">a</span><span class="o">.</span><span class="n">codigo_producto</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;codigo_producto&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">nombre_producto</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_producto&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">categoria</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;categoria&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">cantidad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;cantidad&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">precio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;precio&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡producto Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:producto&#39;</span><span class="p">)</span></div>
+
+<span class="c1"># ======================================================================================================================</span>
+
+<span class="c1"># ===================================================FACTURA============================================================</span>
+
+<div class="viewcode-block" id="factura"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.factura">[documentos]</a><span class="k">def</span> <span class="nf">factura</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Factura</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/factura/listar_factura.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="facturaBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.facturaBuscar">[documentos]</a><span class="k">def</span> <span class="nf">facturaBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Factura</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">id_factura__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/factura/listar_factura_ajax.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="facturaFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.facturaFormulario">[documentos]</a><span class="k">def</span> <span class="nf">facturaFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">u</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;producto&#39;</span><span class="p">:</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;usuario&#39;</span><span class="p">:</span><span class="n">u</span><span class="p">,</span><span class="s1">&#39;servicio&#39;</span><span class="p">:</span><span class="n">s</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/factura/crear_factura.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="facturaGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.facturaGuardar">[documentos]</a><span class="k">def</span> <span class="nf">facturaGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_producto&quot;</span><span class="p">])</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;servicio&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Factura</span><span class="p">(</span>
+                <span class="n">nombre_producto</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span>
+                <span class="n">cantidad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;cantidad&quot;</span><span class="p">],</span>
+                <span class="n">total_sin_descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;total_sin_descuento&quot;</span><span class="p">],</span>
+                <span class="n">descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;descuento&quot;</span><span class="p">],</span>
+                <span class="n">total_con_descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;total_con_descuento&quot;</span><span class="p">],</span>
+                <span class="n">medio_pago</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;medio_pago&quot;</span><span class="p">],</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">u</span><span class="p">,</span>
+                <span class="n">servicios</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡factura guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="facturaEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.facturaEliminar">[documentos]</a><span class="k">def</span> <span class="nf">facturaEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Factura</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Factura</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;ERROR: factura no encontrado&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="editarFactura"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarFactura">[documentos]</a><span class="k">def</span> <span class="nf">editarFactura</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Factura</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Producto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">u</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;producto&#39;</span><span class="p">:</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;usuario&#39;</span><span class="p">:</span><span class="n">u</span><span class="p">,</span><span class="s1">&#39;servicio&#39;</span><span class="p">:</span><span class="n">s</span><span class="p">,</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span><span class="n">A</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/factura/editar_factura.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarFactura"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarFactura">[documentos]</a><span class="k">def</span> <span class="nf">actualizarFactura</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Factura</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">cantidad</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;cantidad&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">total_sin_descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;total_sin_descuento&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;descuento&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">total_con_descuento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;total_con_descuento&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">medio_pago</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;medio_pago&quot;</span><span class="p">]</span>
+            <span class="c1"># a.servicios = request.POST[&quot;servicio&quot;]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡factura Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:factura&#39;</span><span class="p">)</span></div>
+
+<span class="c1"># ======================================================================================================================</span>
+
+<span class="c1"># ===================================================SERVICIO===========================================================</span>
+
+<div class="viewcode-block" id="servicio"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicio">[documentos]</a><span class="k">def</span> <span class="nf">servicio</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/servicio/listar_servicio.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="servicioTarjetas"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicioTarjetas">[documentos]</a><span class="k">def</span> <span class="nf">servicioTarjetas</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/servicio/tarjeta_servicio.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="servicioBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicioBuscar">[documentos]</a><span class="k">def</span> <span class="nf">servicioBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">nombre__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span><span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">servicio__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/servicio/listar_servicio_ajax.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="servicioFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicioFormulario">[documentos]</a><span class="k">def</span> <span class="nf">servicioFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/servicio/crear_servicio.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="servicioGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicioGuardar">[documentos]</a><span class="k">def</span> <span class="nf">servicioGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;vitario/fotos/defaultMas.png&quot;</span>
+                
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Servicios</span><span class="p">(</span>
+                <span class="n">codigo_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;codigo_servicio&quot;</span><span class="p">],</span>
+                <span class="n">nombre_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_servicio&quot;</span><span class="p">],</span>
+                <span class="n">precio_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;precio_servicio&quot;</span><span class="p">],</span>
+                <span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡servicio guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="servicioEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.servicioEliminar">[documentos]</a><span class="k">def</span> <span class="nf">servicioEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultMas.png&quot;</span><span class="p">:</span>
+                <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;No se pudo eliminar la foto&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Servicio eliminado correctamente&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;vitario:servicio&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error!! el ueuario no existe&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;Error!! no se pudo eliminar el registro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="editarServicio"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarServicio">[documentos]</a><span class="k">def</span> <span class="nf">editarServicio</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span><span class="n">A</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/servicio/editar_servicio.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarServicio"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarServicio">[documentos]</a><span class="k">def</span> <span class="nf">actualizarServicio</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                <span class="n">ruta_foto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="s2">&quot;/uploads/vitario/fotos/defaultMas.png&quot;</span><span class="p">:</span>
+                        <span class="n">remove</span><span class="p">(</span><span class="n">ruta_foto</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error!!! la foto no existe o no se encuentra&quot;</span><span class="p">)</span>
+                <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;foto&quot;</span><span class="p">]</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;vitario/fotos/&quot;</span><span class="o">+</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">foto</span> <span class="o">=</span> <span class="n">file</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;No se cambio la foto&quot;</span><span class="p">)</span>
+                
+            <span class="n">a</span><span class="o">.</span><span class="n">codigo_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;codigo_servicio&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">nombre_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_servicio&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">precio_servicio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;precio_servicio&quot;</span><span class="p">]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡servicio Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:servicio&#39;</span><span class="p">)</span></div>
+
+<span class="c1"># ======================================================================================================================</span>
+
+<span class="c1"># ===================================================CITAS==============================================================</span>
+
+<div class="viewcode-block" id="cita"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.cita">[documentos]</a><span class="k">def</span> <span class="nf">cita</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Citas</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/cita/listar_cita.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="citaBuscar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.citaBuscar">[documentos]</a><span class="k">def</span> <span class="nf">citaBuscar</span> <span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Citas</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">nombre__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span><span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">cita__icontains</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">p_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">p_number</span><span class="p">)</span>
+        
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;page_obj&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;Datos&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/cita/listar_cita_ajax.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No se han enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="citaFormulario"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.citaFormulario">[documentos]</a><span class="k">def</span> <span class="nf">citaFormulario</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datos&#39;</span><span class="p">:</span><span class="n">p</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">q</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/cita/crear_cita.html&#39;</span><span class="p">,</span><span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="citaGuardar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.citaGuardar">[documentos]</a><span class="k">def</span> <span class="nf">citaGuardar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre_servicio&quot;</span><span class="p">])</span>
+        
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;nombre&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Citas</span><span class="p">(</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">q</span><span class="p">,</span>
+                <span class="n">hora_fecha</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;hora_fecha&quot;</span><span class="p">],</span>
+                <span class="n">servicio</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡cita guardado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="citaEliminar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.citaEliminar">[documentos]</a><span class="k">def</span> <span class="nf">citaEliminar</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Citas</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Citas</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;ERROR: cita no encontrado&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="editarCita"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.editarCita">[documentos]</a><span class="k">def</span> <span class="nf">editarCita</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Citas</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+    
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Servicios</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;datos&quot;</span><span class="p">:</span><span class="n">A</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s2">&quot;servi&quot;</span><span class="p">:</span><span class="n">b</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Vitario/cita/editar_cita.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="actualizarCita"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.actualizarCita">[documentos]</a><span class="k">def</span> <span class="nf">actualizarCita</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">Citas</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+            <span class="c1"># a.usuario = request.POST[&quot;nombre&quot;]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">hora_fecha</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;hora_fecha&quot;</span><span class="p">]</span>
+            <span class="c1"># a.servicio = request.POST[&quot;servicio&quot;]</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡cita Actualizado correctamente!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;¡No se han enviado datos!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s2">&quot;Error&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;Vitario:cita&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Agendar"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.views.Agendar">[documentos]</a><span class="k">def</span> <span class="nf">Agendar</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># ======================================================================================================================</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Tabla de contenido</a></h3>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.views</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2022, Juan Camilo Galeano Velez.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

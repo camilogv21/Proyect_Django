@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario, Mascota, Producto, Factura, Servicios, Citas
+from .models import Usuario, Mascota, Producto, Factura, Servicios, Citas, Disponibilidad
 # Register your models here.
 
 @admin.register(Usuario)
@@ -52,10 +52,15 @@ class ServiciosAdmin(admin.ModelAdmin):
 class FacturaAdmin(admin.ModelAdmin):
     list_display = ( 'nombre_producto', 'cantidad', 'total_sin_descuento', 'descuento', 'total_con_descuento', 'medio_pago', 'usuario', 'servicios', )
     search_fields = ['id_factura','usuario']
-    
+
+@admin.register(Disponibilidad)
+class disponibilidadAdmin(admin.ModelAdmin):
+    list_display = ('empleado','dia', 'hora', 'fecha_inicio', 'fecha_fin', 'reservado',)
+    search_fields = ['servicio']
+
 @admin.register(Citas)
 class CitasAdmin(admin.ModelAdmin):
-    list_display = ( 'usuario', 'hora_fecha', 'servicio', )
-    search_fields = ['servicio']
+    list_display = ( 'usuario', 'disponibilidad', 'estado' , )
+    search_fields = ['usuario']
 
 

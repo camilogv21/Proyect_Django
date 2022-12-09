@@ -13,22 +13,24 @@
           <h5 class="card-title">{{ perfil.nombre }}</h5>
           <p class="card-text">
             <form action="{% url 'Vitario:actualizar_perfil' %}" method="post">
-                {% csrf_token %}
-                <label for="">Nombre</label>
+              {% csrf_token %}
+              <label for="">Nombre</label>
                 <input type="text" name="nombre" class="form-control" value="{{ perfil.nombre }}">
-                <label for="">Direccion</label>
+              <label for="">Direccion</label>
                 <input type="text" name="direccion" class="form-control" value="{{ perfil.direccion }}">
-                <label for="">Telefono</label>
+              <label for="">Telefono</label>
                 <input type="numbre" name="telefono" class="form-control" value="{{ perfil.telefono }}">
-                <label for="">Correo</label>
+              <label for="">Correo</label>
                 <input type="email" name="correo" class="form-control" value="{{ perfil.correo }}">
-                <label for="">Usuario</label>
+              <label for="">Usuario</label>
                 <input type="text" name="usuario" class="form-control" value="{{ perfil.usuario }}">
-                <label for="">Contraseña</label>
+              <label for="">Contraseña</label>
+              <h6>NOTA: si no quieres cambiar la contraseña dejala en blanco</h6>
                 <input type="password" name="clave" class="form-control"><br>
-
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+              <button type="submit" class="btn btn-primary">Actualizar</button>
             </form>
+          </p>
+        </div>
       </div>
     </div>
   </div>

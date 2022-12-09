@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vitario.admin &#8212; documentación de Vitario - 2.7.18</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.admin</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para Vitario.admin</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Usuario</span><span class="p">,</span> <span class="n">Mascota</span><span class="p">,</span> <span class="n">Producto</span><span class="p">,</span> <span class="n">Factura</span><span class="p">,</span> <span class="n">Servicios</span><span class="p">,</span> <span class="n">Citas</span>
+<span class="c1"># Register your models here.</span>
+
+<div class="viewcode-block" id="UsuarioAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.UsuarioAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Usuario</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UsuarioAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;nombre&#39;</span><span class="p">,</span> <span class="s1">&#39;direccion&#39;</span><span class="p">,</span> <span class="s1">&#39;telefono&#39;</span><span class="p">,</span> <span class="s1">&#39;correo&#39;</span><span class="p">,</span> <span class="s1">&#39;usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;clave&#39;</span><span class="p">,</span> <span class="s1">&#39;rol&#39;</span><span class="p">,</span> <span class="s1">&#39;foto&#39;</span><span class="p">,</span> <span class="s1">&#39;verfoto&#39;</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;nombre&#39;</span><span class="p">,</span><span class="s1">&#39;rol&#39;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="UsuarioAdmin.verfoto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.UsuarioAdmin.verfoto">[documentos]</a>    <span class="k">def</span> <span class="nf">verfoto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">format_html</span>
+        <span class="n">foto</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span>
+        
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;a href=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; target=&#39;_blank&#39;&gt; &lt;img src=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; width=&#39;10%&#39; /&gt; &lt;/a&gt;&quot;</span><span class="p">)</span></div></div>
+    
+<div class="viewcode-block" id="MascotaAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.MascotaAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Mascota</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MascotaAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;nombre_mascota&#39;</span><span class="p">,</span> <span class="s1">&#39;tipo_mascota&#39;</span><span class="p">,</span> <span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;usuario&#39;</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nombre_mascota&#39;</span><span class="p">,</span> <span class="s1">&#39;usuario&#39;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="MascotaAdmin.edad"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.MascotaAdmin.edad">[documentos]</a>    <span class="k">def</span> <span class="nf">edad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+        <span class="n">hoy</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        
+        <span class="n">edad</span> <span class="o">=</span> <span class="n">hoy</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="n">obj</span><span class="o">.</span><span class="n">fecha_nacimiento</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="p">((</span><span class="n">hoy</span><span class="o">.</span><span class="n">month</span><span class="p">,</span><span class="n">hoy</span><span class="o">.</span><span class="n">day</span><span class="p">)</span><span class="o">&lt;</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">fecha_nacimiento</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">fecha_nacimiento</span><span class="o">.</span><span class="n">day</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">edad</span></div></div>
+    
+    
+<div class="viewcode-block" id="ProductoAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.ProductoAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Producto</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ProductoAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;codigo_producto&#39;</span><span class="p">,</span> <span class="s1">&#39;nombre_producto&#39;</span><span class="p">,</span> <span class="s1">&#39;categoria&#39;</span><span class="p">,</span> <span class="s1">&#39;cantidad&#39;</span><span class="p">,</span>  <span class="s1">&#39;precio&#39;</span><span class="p">,</span> <span class="s1">&#39;foto&#39;</span><span class="p">,</span> <span class="s1">&#39;verfoto&#39;</span> <span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id_producto&#39;</span><span class="p">,</span> <span class="s1">&#39;nombre_producto&#39;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="ProductoAdmin.verfoto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.ProductoAdmin.verfoto">[documentos]</a>    <span class="k">def</span> <span class="nf">verfoto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">format_html</span>
+        <span class="n">foto</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span>
+        
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;a href=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; target=&#39;_blank&#39;&gt; &lt;img src=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; width=&#39;10%&#39; /&gt; &lt;/a&gt;&quot;</span><span class="p">)</span></div></div>
+    
+<div class="viewcode-block" id="ServiciosAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.ServiciosAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Servicios</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ServiciosAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;codigo_servicio&#39;</span><span class="p">,</span> <span class="s1">&#39;nombre_servicio&#39;</span><span class="p">,</span> <span class="s1">&#39;precio_servicio&#39;</span><span class="p">,</span><span class="s1">&#39;foto&#39;</span><span class="p">,</span><span class="s1">&#39;verfoto&#39;</span> <span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nombre_servicio&#39;</span><span class="p">]</span>
+    
+<div class="viewcode-block" id="ServiciosAdmin.verfoto"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.ServiciosAdmin.verfoto">[documentos]</a>    <span class="k">def</span> <span class="nf">verfoto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">format_html</span>
+        <span class="n">foto</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">foto</span><span class="o">.</span><span class="n">url</span>
+        
+        <span class="k">return</span> <span class="n">format_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;a href=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; target=&#39;_blank&#39;&gt; &lt;img src=&#39;</span><span class="si">{</span><span class="n">foto</span><span class="si">}</span><span class="s2">&#39; width=&#39;10%&#39; /&gt; &lt;/a&gt;&quot;</span><span class="p">)</span></div></div>
+    
+<div class="viewcode-block" id="FacturaAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.FacturaAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Factura</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FacturaAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;nombre_producto&#39;</span><span class="p">,</span> <span class="s1">&#39;cantidad&#39;</span><span class="p">,</span> <span class="s1">&#39;total_sin_descuento&#39;</span><span class="p">,</span> <span class="s1">&#39;descuento&#39;</span><span class="p">,</span> <span class="s1">&#39;total_con_descuento&#39;</span><span class="p">,</span> <span class="s1">&#39;medio_pago&#39;</span><span class="p">,</span> <span class="s1">&#39;usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;servicios&#39;</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id_factura&#39;</span><span class="p">,</span><span class="s1">&#39;usuario&#39;</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="CitasAdmin"><a class="viewcode-back" href="../../modules/Vitario.html#Vitario.admin.CitasAdmin">[documentos]</a><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Citas</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CitasAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;hora_fecha&#39;</span><span class="p">,</span> <span class="s1">&#39;servicio&#39;</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;servicio&#39;</span><span class="p">]</span></div>
+
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Tabla de contenido</a></h3>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Índice General"
+             >índice</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">documentación de Vitario - 2.7.18</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Código de módulo</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vitario.admin</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Derechos de autor 2022, Juan Camilo Galeano Velez.
+      Creado usando <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

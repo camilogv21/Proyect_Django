@@ -295,7 +295,7 @@
   }
   .contact .info i {
     font-size: 20px;
-    color: #fff;
+    color: black;
     float: left;
     width: 44px;
     height: 44px;
@@ -327,7 +327,7 @@
     font-size: 18px;
     display: inline-block;
     background: #333;
-    color: #fff;
+    color: black;
     line-height: 1;
     padding: 8px 0;
     border-radius: 50%;
@@ -338,12 +338,12 @@
     margin-right: 10px;
   }
   .contact .info .social-links a:hover {
-    background: #eed2df;
-    color: #fff;
+    background: #718fca;
+    color: #718fca;
   }
   .contact .info .email:hover i, .contact .info .address:hover i, .contact .info .phone:hover i {
-    background: #eed2df;
-    color: #fff;
+    background: #718fca;;
+    color: black;;
   }
   .contact .php-email-form {
     width: 100%;

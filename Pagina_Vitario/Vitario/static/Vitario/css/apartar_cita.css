@@ -1,0 +1,12 @@
+#empleado {
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 350px;
+}
+
+#img-apartar{
+    background-color: white;
+    width: 270px;
+    height: 270px;
+}

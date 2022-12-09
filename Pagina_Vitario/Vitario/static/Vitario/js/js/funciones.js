@@ -1,38 +1,59 @@
 function confirmarEliminar(url){
 
-
-    if (confirm("Estas seguro que quieres eliminar este contenido?")){
+    if (confirm("Está seguro?")){
         location.href = url;
-    }
-        
-    
+    }    
+
 }
 
-function buscarA(url){
-    console.log(url);
-    b = $('#buscar').val();
-    r = $('#res');
-    t = $('input[name="csrfmiddlewaretoken"]').val();
-    console.log(t)
-    // buscar = document.getElementById("buscar").value;
-    // console.log(buscar);
-    // console.log( buscar.val() );
+function buscarAprendices(url){
+    dato = $('#dato').val();
+    resultado = $('#respuesta');
+    token = $('input[name="csrfmiddlewaretoken"]').val();
+    console.log("Token:" + token);
     $.ajax({
-
         url: url,
         type: 'post',
-        data: {"buscar": b, "csrfmiddlewaretoken": t },
-        success: function(res){
-            //console.log(res);
-            r.html(res);
-            //r.innerhtml = res
+        data: { "dato": dato, "csrfmiddlewaretoken": token},
+        //dataType: 'json',
+        success: function(respuesta){
+            resultado.html(respuesta);
         },
         error: function(error){
-            console.log("El error es: "+ error);
+            console.log("Error" + error);
         }
-
     });
+}
 
+function buscarUsuarios(url){
+    dato = $('#dato').val();
+    resultado = $('#respuesta');
+    token = $('input[name="csrfmiddlewaretoken"]').val();
+    //console.log("Token:" + token);
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: { "dato": dato, "csrfmiddlewaretoken": token},
+        //dataType: 'json',
+        success: function(respuesta){
+            resultado.html(respuesta);
+        },
+        error: function(error){
+            console.log("Error" + error);
+        }
+    });
+}
+
+
+function checksAgenda(idlink, idcheckbox){
+    idlink.blur();
+
+    if(idcheckbox.checked){
+        idcheckbox.checked = false;
+    }
+    else{
+        idcheckbox.checked = true ;
+    }
 
 
 }
